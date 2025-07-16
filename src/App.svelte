@@ -3,7 +3,7 @@
     import type { IData } from "./interafaces/data";
 
     let q = $state("");
-    let data: IData[] | null = $state(null);
+    let data: IData[] | null = $state(getPersisted());
     async function findPlace(q: string) {
         const res = await fetch(
             `https://nominatim.openstreetmap.org/search?q=${q}&format=json&addressdetails=1`,
@@ -21,6 +21,15 @@
     function getMarker(data: IData): [number, number] {
         return [parseFloat(data.lat), parseFloat(data.lon)];
     }
+
+    function getPersisted() {
+        const persisted = localStorage.getItem("logpose:data");
+        if (!persisted) {
+            return null;
+        }
+
+        return [JSON.parse(persisted)];
+    }
 </script>
 
 <form>
@@ -30,8 +39,10 @@
         onclick={(event) => {
             event.preventDefault();
             findPlace(q);
-        }}>find</button
+        }}
     >
+        find
+    </button>
 </form>
 
 <main style="width:800px;height:500px;">
@@ -46,3 +57,11 @@
             : null}
     />
 </main>
+
+<button
+    onclick={() => {
+        localStorage.setItem("logpose:data", JSON.stringify(data[0]));
+    }}
+>
+    save
+</button>
