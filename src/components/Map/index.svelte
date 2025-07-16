@@ -16,10 +16,10 @@
         }[];
     } = $props();
 
-    let geojson: TGeoJSON = $state();
-    let map: TMap = $state();
+    let geojson: TGeoJSON | undefined = $state();
+    let map: TMap | undefined = $state();
 
-    function getVisited(country: string): typeof data {
+    function getVisited(country: string): any {
         const found = data.features.find((f) => f.properties.name === country);
 
         if (!found) {
@@ -35,7 +35,7 @@
         };
     }
 
-    function style(_) {
+    function style(_: unknown) {
         return {
             weight: 2,
             opacity: 1,
@@ -46,7 +46,7 @@
         };
     }
 
-    function onEachFeature(_, layer: Layer) {
+    function onEachFeature(_: unknown, layer: Layer) {
         layer.on({
             mouseover: highlightFeature,
             mouseout: resetHighlight,
@@ -68,10 +68,18 @@
     }
 
     function resetHighlight(e: LeafletMouseEvent) {
+        if (!geojson) {
+            return;
+        }
+
         geojson.resetStyle(e.target);
     }
 
     function zoomToFeature(e: LeafletMouseEvent) {
+        if (!map) {
+            return;
+        }
+
         map.fitBounds(e.target.getBounds());
     }
 </script>
