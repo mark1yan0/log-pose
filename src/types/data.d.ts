@@ -33,3 +33,8 @@ export interface IData {
     place_rank: number;
     type: string;
 }
+
+export interface IPlace {
+    data: IData;
+    position: [number, number];
+}

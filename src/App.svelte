@@ -1,9 +1,9 @@
 <script lang="ts">
     import Map from "./components/Map/index.svelte";
-    import type { IData } from "./interafaces/data";
+    import type { IData, IPlace } from "./types/data";
 
     let q = $state("");
-    let data: IData[] | null = $state(getPersisted());
+    let places: IPlace[] | null = $state(getPersisted());
     async function findPlace(q: string) {
         const res = await fetch(
             `https://nominatim.openstreetmap.org/search?q=${q}&format=json&addressdetails=1`,
@@ -15,20 +15,31 @@
                 },
             },
         );
-        data = await res.json();
+        return await res.json();
     }
 
-    function getMarker(data: IData): [number, number] {
+    function getMarker(data: IData): IPlace["position"] {
         return [parseFloat(data.lat), parseFloat(data.lon)];
     }
 
-    function getPersisted() {
+    function getPersisted(): IPlace[] | null {
         const persisted = localStorage.getItem("logpose:data");
         if (!persisted) {
             return null;
         }
 
-        return [JSON.parse(persisted)];
+        return JSON.parse(persisted);
+    }
+
+    function getPlaces(data: IData[] | null): IPlace[] | null {
+        if (!data || data.length === 0) {
+            return null;
+        }
+
+        return data.map((d) => ({
+            position: getMarker(d),
+            data: d,
+        }));
     }
 </script>
 
@@ -36,9 +47,10 @@
     <input name="place" bind:value={q} />
     <button
         type="submit"
-        onclick={(event) => {
+        onclick={async (event) => {
             event.preventDefault();
-            findPlace(q);
+            const data = await findPlace(q);
+            places = getPlaces(data);
         }}
     >
         find
@@ -46,21 +58,12 @@
 </form>
 
 <main style="width:800px;height:500px;">
-    <Map
-        places={data
-            ? [
-                  {
-                      position: getMarker(data[0]),
-                      data: data[0],
-                  },
-              ]
-            : null}
-    />
+    <Map {places} />
 </main>
 
 <button
     onclick={() => {
-        localStorage.setItem("logpose:data", JSON.stringify(data[0]));
+        localStorage.setItem("logpose:data", JSON.stringify(places));
     }}
 >
     save

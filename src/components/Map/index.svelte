@@ -6,21 +6,20 @@
         Map as TMap,
         LeafletMouseEvent,
     } from "leaflet";
-    import data from "../../assets/countries.geo.json";
-    import type { IData } from "../../interafaces/data";
+    import countries from "../../assets/countries.geo.json";
+    import type { IPlace } from "../../types/data";
 
     const props: {
-        places?: {
-            position: [number, number];
-            data: IData;
-        }[];
+        places: IPlace[] | null;
     } = $props();
 
     let geojson: TGeoJSON | undefined = $state();
     let map: TMap | undefined = $state();
 
     function getVisited(country: string): any {
-        const found = data.features.find((f) => f.properties.name === country);
+        const found = countries.features.find(
+            (f) => f.properties.name === country,
+        );
 
         if (!found) {
             return {
@@ -83,6 +82,8 @@
         map.fitBounds(e.target.getBounds());
     }
 </script>
+
+{JSON.stringify(props.places)}
 
 <Map options={{ center: [37.530697, 15.079602], zoom: 4 }} bind:instance={map}>
     {#if props.places && props.places.length > 0}
