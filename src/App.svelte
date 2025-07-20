@@ -1,10 +1,10 @@
 <script lang="ts">
-    import Map from "./components/Map/index.svelte";
-    import type { IData, IPlace } from "./types/data";
-    import countries from "./assets/countries.geo.json";
+    import PlacesMap from "./components/PlacesMap/index.svelte";
+    import type { IData } from "./types/data";
+    import placesManager from "./services/places.svelte";
 
     let q = $state("");
-    let places: IPlace[] | null = $state(getPersisted());
+    let results: IData[] | null = $state(null);
     async function findPlace(q: string) {
         const res = await fetch(
             `https://nominatim.openstreetmap.org/search?q=${q}&format=json&addressdetails=1`,
@@ -19,65 +19,40 @@
         return await res.json();
     }
 
-    function getMarker(data: IData): IPlace["position"] {
-        return [parseFloat(data.lat), parseFloat(data.lon)];
-    }
-
-    function getPersisted(): IPlace[] | null {
-        const persisted = localStorage.getItem("logpose:data");
-        if (!persisted) {
-            return null;
-        }
-
-        return JSON.parse(persisted);
-    }
-
-    function getGeoJSON(data: IData) {
-        // TODO: must be enhaced. For example we can find the same city in a country
-        // TODO: multiple countries
-        const found = countries.features.find(
-            (f) => f.properties.name === data.address.country,
-        );
-
-        if (!found) {
-            return {
-                type: "FeatureCollection",
-                features: [],
-            };
-        }
-
-        return {
-            type: "FeatureCollection",
-            features: [found],
-        };
-    }
-
     async function submitHandler(event: MouseEvent) {
         event.preventDefault();
         const data = await findPlace(q);
-        const firstResult = data[0];
-        // TODO: for now get the first result. Latero on user should be able to select which one
-        places?.push({
-            position: getMarker(firstResult),
-            data: firstResult,
-            countryShape: getGeoJSON(firstResult),
-        });
+        // const firstResult = data[0];
+        // preview should be shown
+        results = data;
     }
 </script>
 
 <form>
     <input name="place" bind:value={q} />
     <button type="submit" onclick={submitHandler}> find </button>
+    <button
+        type="button"
+        onclick={() => {
+            if (!results) {
+                // if no results nothing to add
+                return;
+            }
+
+            placesManager.add(results[0]);
+            // clear results preview
+            results = null;
+        }}
+    >
+        save
+    </button>
 </form>
 
+<!-- shows results preview or places -->
 <main style="width:800px;height:500px;">
-    <Map {places} />
+    <PlacesMap
+        places={results
+            ? placesManager.preview(results[0])
+            : placesManager.get()}
+    />
 </main>
-
-<button
-    onclick={() => {
-        localStorage.setItem("logpose:data", JSON.stringify(places));
-    }}
->
-    save
-</button>
