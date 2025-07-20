@@ -1,10 +1,11 @@
-import type { IData, IPlace } from "../types/data";
+import type { IData, IPlace } from "$types/data";
 import countries from "../assets/countries.geo.json";
 
 class PlacesManager {
     private static instance: PlacesManager;
     private key = "logpose:data";
 
+    private found: IData[] | null = $state(null);
     private places: IPlace[] = $state(this.persisted());
 
     constructor() {}
@@ -17,17 +18,51 @@ class PlacesManager {
     }
 
     // methods
-    public get() {
+    public async query(q: string) {
+        const res = await fetch(
+            `https://nominatim.openstreetmap.org/search?q=${q}&format=json&addressdetails=1`,
+            {
+                method: "get",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept-Language": "en",
+                },
+            },
+        );
+
+        this.found = await res.json();
+    }
+
+    /**
+     * If in search mode, will return the preview, othrwize all saved
+     */
+    public all() {
+        if (this.found && this.found.length > 0) {
+            return [
+                {
+                    position: this.getMarkerPosition(this.found[0]),
+                    data: this.found[0],
+                    countryShape: this.getGeoJSON(this.found[0]),
+                },
+            ];
+        }
+
         return this.places;
     }
 
-    public add(place: IData) {
+    public add() {
+        if (!this.found) {
+            return null;
+        }
+
+        const place = this.found[0];
         this.places.push({
-            position: this.getParkerPosition(place),
+            position: this.getMarkerPosition(place),
             data: place,
             countryShape: this.getGeoJSON(place),
         });
 
+        this.found = null;
         this.persist();
     }
 
@@ -39,12 +74,16 @@ class PlacesManager {
         this.persist();
     }
 
-    public preview(place: IData) {
+    public preview() {
+        if (!this.found) {
+            return null;
+        }
+
         return [
             {
-                position: this.getParkerPosition(place),
-                data: place,
-                countryShape: this.getGeoJSON(place),
+                position: this.getMarkerPosition(this.found[0]),
+                data: this.found[0],
+                countryShape: this.getGeoJSON(this.found[0]),
             },
         ];
     }
@@ -63,7 +102,7 @@ class PlacesManager {
         return JSON.parse(persisted);
     }
 
-    private getParkerPosition(place: IData): [number, number] {
+    private getMarkerPosition(place: IData): [number, number] {
         return [parseFloat(place.lat), parseFloat(place.lon)];
     }
 
