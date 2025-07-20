@@ -31,6 +31,14 @@ class PlacesManager {
         this.persist();
     }
 
+    public delete(place: IPlace) {
+        const idx = this.places.findIndex(
+            (p) => p.data.place_id === place.data.place_id,
+        );
+        this.places.splice(idx, 1);
+        this.persist();
+    }
+
     public preview(place: IData) {
         return [
             {
