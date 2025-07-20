@@ -6,7 +6,6 @@
         Map as TMap,
         LeafletMouseEvent,
     } from "leaflet";
-    import countries from "../../assets/countries.geo.json";
     import type { IPlace } from "../../types/data";
 
     const props: {
@@ -15,24 +14,6 @@
 
     let geojson: TGeoJSON | undefined = $state();
     let map: TMap | undefined = $state();
-
-    function getVisited(country: string): any {
-        const found = countries.features.find(
-            (f) => f.properties.name === country,
-        );
-
-        if (!found) {
-            return {
-                type: "FeatureCollection",
-                features: [],
-            };
-        }
-
-        return {
-            type: "FeatureCollection",
-            features: [found],
-        };
-    }
 
     function style(_: unknown) {
         return {
@@ -103,7 +84,7 @@
         {#each props.places as place}
             <GeoJSON
                 bind:instance={geojson}
-                json={getVisited(place.data.address.country)}
+                json={place.countryShape}
                 options={{
                     style,
                     onEachFeature,

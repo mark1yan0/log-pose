@@ -1,6 +1,7 @@
 <script lang="ts">
     import Map from "./components/Map/index.svelte";
     import type { IData, IPlace } from "./types/data";
+    import countries from "./assets/countries.geo.json";
 
     let q = $state("");
     let places: IPlace[] | null = $state(getPersisted());
@@ -39,7 +40,28 @@
         return data.map((d) => ({
             position: getMarker(d),
             data: d,
+            countryShape: getGeoJSON(d),
         }));
+    }
+
+    function getGeoJSON(data: IData) {
+        // TODO: must be enhaced. For example we can find the same city in a country
+        // TODO: multiple countries
+        const found = countries.features.find(
+            (f) => f.properties.name === data.address.country,
+        );
+
+        if (!found) {
+            return {
+                type: "FeatureCollection",
+                features: [],
+            };
+        }
+
+        return {
+            type: "FeatureCollection",
+            features: [found],
+        };
     }
 </script>
 
