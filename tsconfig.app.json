@@ -20,7 +20,9 @@
             "$services": ["./src/services"],
             "$services/*": ["./src/services/*"],
             "$types": ["./src/types"],
-            "$types/*": ["./src/types/*"]
+            "$types/*": ["./src/types/*"],
+            "$lib": ["./src/lib"],
+            "$lib/*": ["./src/lib/*"]
         }
     },
     "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]

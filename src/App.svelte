@@ -1,10 +1,13 @@
 <script lang="ts">
+    import "./app.css";
     import PlacesMap from "./components/PlacesMap/index.svelte";
     import type { IData } from "$types/data";
     import placesManager from "$services/places.svelte";
+    import { Button } from "$lib/components/ui/button";
 
     let q = $state("");
     let results: IData[] | null = $state(null);
+
     async function findPlace(q: string) {
         const res = await fetch(
             `https://nominatim.openstreetmap.org/search?q=${q}&format=json&addressdetails=1`,
@@ -16,12 +19,15 @@
                 },
             },
         );
+
         return await res.json();
     }
 
     async function submitHandler(event: MouseEvent) {
         event.preventDefault();
+
         const data = await findPlace(q);
+
         // const firstResult = data[0];
         // preview should be shown
         results = data;
@@ -30,8 +36,8 @@
 
 <form>
     <input name="place" bind:value={q} />
-    <button type="submit" onclick={submitHandler}> find </button>
-    <button
+    <Button type="submit" onclick={submitHandler}>find</Button>
+    <Button
         type="button"
         onclick={() => {
             if (!results) {
@@ -45,7 +51,7 @@
         }}
     >
         save
-    </button>
+    </Button>
 </form>
 
 <!-- shows results preview or places -->
