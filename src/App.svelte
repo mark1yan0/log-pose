@@ -32,18 +32,6 @@
         return JSON.parse(persisted);
     }
 
-    function getPlaces(data: IData[] | null): IPlace[] | null {
-        if (!data || data.length === 0) {
-            return null;
-        }
-
-        return data.map((d) => ({
-            position: getMarker(d),
-            data: d,
-            countryShape: getGeoJSON(d),
-        }));
-    }
-
     function getGeoJSON(data: IData) {
         // TODO: must be enhaced. For example we can find the same city in a country
         // TODO: multiple countries
@@ -63,20 +51,23 @@
             features: [found],
         };
     }
+
+    async function submitHandler(event: MouseEvent) {
+        event.preventDefault();
+        const data = await findPlace(q);
+        const firstResult = data[0];
+        // TODO: for now get the first result. Latero on user should be able to select which one
+        places?.push({
+            position: getMarker(firstResult),
+            data: firstResult,
+            countryShape: getGeoJSON(firstResult),
+        });
+    }
 </script>
 
 <form>
     <input name="place" bind:value={q} />
-    <button
-        type="submit"
-        onclick={async (event) => {
-            event.preventDefault();
-            const data = await findPlace(q);
-            places = getPlaces(data);
-        }}
-    >
-        find
-    </button>
+    <button type="submit" onclick={submitHandler}> find </button>
 </form>
 
 <main style="width:800px;height:500px;">

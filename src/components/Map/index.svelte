@@ -64,8 +64,6 @@
     }
 </script>
 
-{JSON.stringify(props.places)}
-
 <Map options={{ center: [37.530697, 15.079602], zoom: 4 }} bind:instance={map}>
     {#if props.places && props.places.length > 0}
         {#each props.places as place}
