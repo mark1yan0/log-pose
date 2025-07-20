@@ -6,8 +6,8 @@
         Map as TMap,
         LeafletMouseEvent,
     } from "leaflet";
-    import type { IPlace } from "../../types/data";
-    import placesManager from "../../services/places.svelte";
+    import type { IPlace } from "$types/data";
+    import placesManager from "$services/places.svelte";
 
     const props: {
         places: IPlace[] | null;

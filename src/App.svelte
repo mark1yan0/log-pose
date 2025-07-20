@@ -1,7 +1,7 @@
 <script lang="ts">
     import PlacesMap from "./components/PlacesMap/index.svelte";
-    import type { IData } from "./types/data";
-    import placesManager from "./services/places.svelte";
+    import type { IData } from "$types/data";
+    import placesManager from "$services/places.svelte";
 
     let q = $state("");
     let results: IData[] | null = $state(null);
