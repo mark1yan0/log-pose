@@ -1,4 +1,5 @@
 import type { IData, IPlace } from "$types/data";
+import { toast } from "svelte-sonner";
 import countries from "../assets/countries.geo.json";
 
 class PlacesManager {
@@ -64,6 +65,7 @@ class PlacesManager {
 
         this.found = null;
         this.persist();
+        toast.success(`Place "${place.name}" added successfully`);
     }
 
     public delete(place: IPlace) {
@@ -72,6 +74,7 @@ class PlacesManager {
         );
         this.places.splice(idx, 1);
         this.persist();
+        toast.success(`Place "${place.data.name}" removed successfully`);
     }
 
     public preview() {
@@ -83,9 +86,14 @@ class PlacesManager {
             {
                 position: this.getMarkerPosition(this.found[0]),
                 data: this.found[0],
+                // TODO: refactor
                 countryShape: this.getGeoJSON(this.found[0]),
             },
         ];
+    }
+
+    public isPreview() {
+        return !!this.found;
     }
 
     // private

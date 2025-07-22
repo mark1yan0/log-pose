@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { Toaster } from "$lib/components/ui/sonner/index";
     import Sidebar from "./Sidebar.svelte";
     import * as DefaultSidebar from "$lib/components/ui/sidebar/index";
     import Cursor from "$lib/components/cursor/cursor.svelte";
@@ -13,3 +14,5 @@
         {@render props.children()}
     </main>
 </DefaultSidebar.Provider>
+
+<Toaster />
