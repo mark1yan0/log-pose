@@ -2,6 +2,7 @@
     import placesManager from "$services/places.svelte";
     import { Button } from "$lib/components/ui/button";
     import * as Sidebar from "$lib/components/ui/sidebar/index";
+    import Input from "$lib/components/ui/input/input.svelte";
 
     // TODO: move to a form
     let q = $state("");
@@ -18,9 +19,9 @@
 
 <Sidebar.Root>
     <Sidebar.Header />
-    <Sidebar.Content>
-        <form>
-            <input name="place" bind:value={q} />
+    <Sidebar.Content class="px-2">
+        <form class="flex flex-col gap-2">
+            <Input name="place" bind:value={q} />
             <Button type="submit" onclick={submitHandler}>find</Button>
             <Button type="button" onclick={saveHandler}>save</Button>
         </form>
