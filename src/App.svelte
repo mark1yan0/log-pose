@@ -3,4 +3,4 @@
     import RootLayout from "$lib/layouts/root.svelte";
 </script>
 
-<RootLayout>
+<RootLayout />

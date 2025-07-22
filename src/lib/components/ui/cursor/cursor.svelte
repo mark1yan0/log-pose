@@ -61,7 +61,7 @@
         transition: width 0.2s ease-in-out, height 0.2s ease-in-out;
     `}
     class={twMerge(`
-        w-[var(--w)] h-[var(--h)] absolute top-[var(--y)] left-[var(--x)] z-[10000]
+        w-[var(--w)] h-[var(--h)] absolute top-[var(--y)] left-[var(--x)] z-[11000]
         rounded-full border-dashed border-2 border-primary-foreground
         bg-primary mix-blend-difference pointer-events-none
         animate-spin animation-duration-[10s] animation-timing-function-ease-in-out

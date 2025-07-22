@@ -6,7 +6,7 @@ class PlacesManager {
     private static instance: PlacesManager;
     private key = "logpose:data";
 
-    private found: IData[] | null = $state(null);
+    private results: IPlace[] | null = $state(null);
     private places: IPlace[] = $state(this.persisted());
 
     constructor() {}
@@ -31,41 +31,36 @@ class PlacesManager {
             },
         );
 
-        this.found = await res.json();
+        const data: IData[] = await res.json();
+        this.results = data.map<IPlace>((d) => ({
+            position: this.getMarkerPosition(d),
+            data: d,
+            countryShape: this.getGeoJSON(d),
+        }));
     }
 
     /**
      * If in search mode, will return the preview, othrwize all saved
      */
     public all() {
-        if (this.found && this.found.length > 0) {
-            return [
-                {
-                    position: this.getMarkerPosition(this.found[0]),
-                    data: this.found[0],
-                    countryShape: this.getGeoJSON(this.found[0]),
-                },
-            ];
+        if (this.results && this.results.length > 0) {
+            return this.results;
         }
 
         return this.places;
     }
 
-    public add() {
-        if (!this.found) {
+    public add(place: IPlace) {
+        if (!this.results) {
             return null;
         }
 
-        const place = this.found[0];
-        this.places.push({
-            position: this.getMarkerPosition(place),
-            data: place,
-            countryShape: this.getGeoJSON(place),
-        });
+        // TODO: handle selected
+        this.places.push(place);
 
-        this.found = null;
+        this.results = null;
         this.persist();
-        toast.success(`Place "${place.name}" added successfully`);
+        toast.success(`Place "${place.data.name}" added successfully`);
     }
 
     public delete(place: IPlace) {
@@ -77,23 +72,12 @@ class PlacesManager {
         toast.success(`Place "${place.data.name}" removed successfully`);
     }
 
-    public preview() {
-        if (!this.found) {
-            return null;
-        }
-
-        return [
-            {
-                position: this.getMarkerPosition(this.found[0]),
-                data: this.found[0],
-                // TODO: refactor
-                countryShape: this.getGeoJSON(this.found[0]),
-            },
-        ];
+    public previews() {
+        return this.results;
     }
 
     public isPreview() {
-        return !!this.found;
+        return !!this.results;
     }
 
     // private

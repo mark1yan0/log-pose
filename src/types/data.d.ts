@@ -35,7 +35,7 @@ export interface IData {
 }
 
 export interface IPlace {
-    data: IData;
+    data: IData; // TODO: change to details?
     position: [number, number];
     countryShape: any; // GeoJsonObject
 }

@@ -86,6 +86,7 @@
                     }}
                 >
                     <Popup>
+                        <h3>{place.data.name}</h3>
                         <button onclick={() => placesManager.delete(place)}>
                             delete
                         </button>
