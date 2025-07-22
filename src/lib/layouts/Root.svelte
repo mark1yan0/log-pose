@@ -1,10 +1,12 @@
 <script lang="ts">
     import Sidebar from "./Sidebar.svelte";
     import * as DefaultSidebar from "$lib/components/ui/sidebar/index";
+    import Cursor from "$lib/components/cursor/cursor.svelte";
 
     let props = $props();
 </script>
 
+<Cursor />
 <DefaultSidebar.Provider>
     <Sidebar />
     <main style="width:800px;height:500px;">
