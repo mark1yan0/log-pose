@@ -3,8 +3,8 @@
     import Sidebar from "./sidebar.svelte";
     import * as DefaultSidebar from "$lib/components/ui/sidebar/index";
     import Cursor from "$lib/components/ui/cursor/cursor.svelte";
-
-    let props = $props();
+    import PlacesMap from "$lib/layouts/map.svelte";
+    import placesManager from "$services/places.svelte";
 </script>
 
 <Cursor />
@@ -12,7 +12,7 @@
 <DefaultSidebar.Provider>
     <Sidebar />
     <main>
-        {@render props.children()}
+        <PlacesMap places={placesManager.all()} />
     </main>
 </DefaultSidebar.Provider>
 
