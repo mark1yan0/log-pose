@@ -32,6 +32,8 @@
                 </div>
                 <Button onclick={() => placesManager.add(result)}>add</Button>
             </article>
+        {:else}
+            <p>No places searched</p>
         {/each}
     </div>
 </div>
