@@ -8,9 +8,10 @@
 </script>
 
 <Cursor />
+
 <DefaultSidebar.Provider>
     <Sidebar />
-    <main style="width:800px;height:500px;">
+    <main>
         {@render props.children()}
     </main>
 </DefaultSidebar.Provider>

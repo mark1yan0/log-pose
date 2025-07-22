@@ -3,7 +3,7 @@
     import * as Sidebar from "$lib/components/ui/sidebar/index";
 </script>
 
-<Sidebar.Root>
+<Sidebar.Root collapsible="offcanvas">
     <Sidebar.Header />
     <Sidebar.Content class="px-2">
         <PlacesForm />

@@ -1,6 +1,6 @@
 <script lang="ts">
     import "./app.css";
-    import PlacesMap from "./components/PlacesMap/index.svelte";
+    import PlacesMap from "$lib/layouts/map.svelte";
     import placesManager from "$services/places.svelte";
     import Root from "$lib/layouts/root.svelte";
 </script>
