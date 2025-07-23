@@ -20,6 +20,10 @@ class PlacesManager {
 
     // methods
     public async query(q: string) {
+        if (!q) {
+            return null;
+        }
+
         const res = await fetch(
             `https://nominatim.openstreetmap.org/search?q=${q}&format=json&addressdetails=1`,
             {
@@ -37,6 +41,7 @@ class PlacesManager {
             data: d,
             countryShape: this.getGeoJSON(d),
         }));
+        return this.results;
     }
 
     /**

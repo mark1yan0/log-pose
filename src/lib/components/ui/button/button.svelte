@@ -29,7 +29,7 @@
             },
         },
         defaultVariants: {
-            variant: "default",
+            variant: "outline",
             size: "default",
         },
     });
@@ -41,19 +41,21 @@
         WithElementRef<HTMLAnchorAttributes> & {
             variant?: ButtonVariant;
             size?: ButtonSize;
+            command?: string;
         };
 </script>
 
 <script lang="ts">
     let {
         class: className,
-        variant = "default",
+        variant = "outline",
         size = "default",
         ref = $bindable(null),
         href = undefined,
         type = "button",
         disabled,
         children,
+        command,
         ...restProps
     }: ButtonProps = $props();
 </script>
@@ -62,7 +64,7 @@
     <a
         bind:this={ref}
         data-slot="button"
-        class={cn(buttonVariants({ variant, size }), className)}
+        class={cn(buttonVariants({ variant, size }), command && "", className)}
         href={disabled ? undefined : href}
         aria-disabled={disabled}
         role={disabled ? "link" : undefined}
@@ -81,5 +83,12 @@
         {...restProps}
     >
         {@render children?.()}
+        {#if command}
+            <kbd
+                class="text-muted-foreground pointer-events-none inline-flex items-center gap-1 font-mono text-[10px] font-medium opacity-100 select-none"
+            >
+                <span class="text-xs">⌘</span>{command.toUpperCase()}
+            </kbd>
+        {/if}
     </button>
 {/if}
