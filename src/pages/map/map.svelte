@@ -8,17 +8,10 @@
     } from "leaflet";
     import type { IPlace } from "$types/data";
     import placesManager from "$services/places.svelte";
-    import PanelRightClose from "@lucide/svelte/icons/panel-right-close";
-    import PanelLeftClose from "@lucide/svelte/icons/panel-left-close";
-
-    import { Button } from "$lib/components/ui/button";
-    import { useSidebar } from "$lib/components/ui/sidebar/index";
 
     const props: {
         places: IPlace[] | null;
     } = $props();
-
-    const sidebar = useSidebar();
 
     let geojson: TGeoJSON | undefined = $state();
     let map: TMap | undefined = $state();
@@ -115,16 +108,4 @@
             {/each}
         {/if}
     </Map>
-
-    <Button
-        variant="secondary"
-        class="absolute bottom-2 left-2 z-[1000]"
-        onclick={() => sidebar.toggle()}
-    >
-        {#if sidebar.open}
-            <PanelLeftClose />
-        {:else}
-            <PanelRightClose />
-        {/if}
-    </Button>
 </div>

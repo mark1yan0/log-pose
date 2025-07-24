@@ -10,12 +10,9 @@
 
 <Cursor />
 
-<DefaultSidebar.Provider open={false}>
-    <Sidebar />
-    <main>
-        <PlacesMap places={placesManager.all()} />
-        <NewPlaceDialog />
-    </main>
-</DefaultSidebar.Provider>
+<main>
+    <PlacesMap places={placesManager.all()} />
+    <NewPlaceDialog />
+</main>
 
 <Toaster />

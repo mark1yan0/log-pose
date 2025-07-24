@@ -7,7 +7,6 @@
     import AlertCircleIcon from "@lucide/svelte/icons/alert-circle";
     import * as Alert from "$lib/components/ui/alert";
     import { Skeleton } from "$lib/components/ui/skeleton";
-    import { clear } from "node:console";
 
     const OPEN_KEY = "k";
 
