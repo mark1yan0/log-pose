@@ -6,7 +6,8 @@ import type { IQuery } from "$types/query";
 class PlacesManager {
     private static instance: PlacesManager;
     private key = "logpose:data";
-    private places: IPlace[] = $state(this.persisted());
+    private places: IPlace[] = $state(this.persisted().places);
+    private geojson: typeof countries = $state(this.persisted().geojson);
 
     constructor() {}
 
@@ -47,7 +48,9 @@ class PlacesManager {
                 data: data.map<IPlace>((d) => ({
                     position: this.getMarkerPosition(d),
                     data: d,
-                    countryShape: this.getGeoJSON(d),
+                    style: {
+                        fillColor: "#542341",
+                    },
                 })),
             };
         } catch (error) {
@@ -70,6 +73,7 @@ class PlacesManager {
     public add(place: IPlace) {
         this.places.push(place);
 
+        this.updateGeoJSON(place);
         this.persist();
         toast.success(`Place "${place.data.name}" added successfully`);
     }
@@ -78,20 +82,54 @@ class PlacesManager {
         const idx = this.places.findIndex(
             (p) => p.data.place_id === place.data.place_id,
         );
+
         this.places.splice(idx, 1);
+
+        // remove geojson if no country anymore
+        const curr = this.places.map((p) => p.data.address.country);
+        const featureByContry = this.geojson.features.map(
+            (f) => f.properties.name,
+        );
+        for (const c of featureByContry) {
+            if (!curr.includes(c)) {
+                this.geojson.features = this.geojson.features.filter(
+                    (f) => f.properties.name !== c,
+                );
+            }
+        }
+
         this.persist();
         toast.success(`Place "${place.data.name}" removed successfully`);
     }
 
-    // private
-    private persist() {
-        localStorage.setItem(this.key, JSON.stringify(this.places));
+    public getGeoJSON() {
+        return this.geojson;
     }
 
-    private persisted(): IPlace[] {
+    // private
+    private persist() {
+        localStorage.setItem(
+            this.key,
+            JSON.stringify({
+                places: this.places,
+                geojson: this.geojson,
+            }),
+        );
+    }
+
+    private persisted(): {
+        places: IPlace[];
+        geojson: typeof countries;
+    } {
         const persisted = localStorage.getItem(this.key);
         if (!persisted) {
-            return [];
+            return {
+                places: [],
+                geojson: {
+                    type: "FeatureCollection",
+                    features: [],
+                },
+            };
         }
 
         return JSON.parse(persisted);
@@ -101,24 +139,25 @@ class PlacesManager {
         return [parseFloat(place.lat), parseFloat(place.lon)];
     }
 
-    private getGeoJSON(place: IData) {
-        // TODO: must be enhaced. For example we can find the same city in a country
-        // TODO: multiple countries
+    private updateGeoJSON(place: IPlace) {
+        if (
+            this.geojson.features.find(
+                (f) => f.properties.name === place.data.address.country,
+            )
+        ) {
+            // is already in there. skip
+            return this.geojson;
+        }
+
         const found = countries.features.find(
-            (f) => f.properties.name === place.address.country,
+            (f) => f.properties.name === place.data.address.country,
         );
 
         if (!found) {
-            return {
-                type: "FeatureCollection",
-                features: [],
-            };
+            return this.geojson;
         }
 
-        return {
-            type: "FeatureCollection",
-            features: [found],
-        };
+        this.geojson.features.push(found);
     }
 }
 
