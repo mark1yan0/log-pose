@@ -2,7 +2,11 @@
     import placesManager from "$services/places.svelte";
     import * as Command from "$lib/components/ui/command/index.js";
     import Button from "$lib/components/ui/button/button.svelte";
+    import type { IQuery } from "$types/query";
     import type { IPlace } from "$types/data";
+    import AlertCircleIcon from "@lucide/svelte/icons/alert-circle";
+    import * as Alert from "$lib/components/ui/alert";
+    import { Skeleton } from "$lib/components/ui/skeleton";
 
     const OPEN_KEY = "k";
 
@@ -15,18 +19,41 @@
         }
     }
 
-    let results = $state<IPlace[] | null>(null);
+    // TODO: better api handling
+    let query = $state<IQuery<IPlace[]>>({
+        isLoading: false,
+        data: null,
+        error: null,
+    });
     let timer = $state<ReturnType<typeof setTimeout>>();
     const debounced = async (v: string) => {
         clearTimeout(timer);
         timer = setTimeout(async () => {
-            // TODO: handle with react query for better ux
-            results = await placesManager.query(v);
+            query.isLoading = true;
+            query = await placesManager.search(v);
         }, 750);
     };
 
     const inputHandler = async (event: Event) => {
         const target = event.target as HTMLInputElement;
+
+        if (!target.value) {
+            query = {
+                isLoading: false,
+                data: null,
+                error: null,
+            };
+            return;
+        }
+
+        if (query.error) {
+            query.error = null;
+        }
+
+        if (query.isLoading) {
+            query.isLoading = false;
+        }
+
         await debounced(target.value);
     };
 </script>
@@ -35,38 +62,73 @@
 
 <Command.Dialog bind:open shouldFilter={false}>
     <Command.Input oninput={inputHandler} placeholder="Search place..." />
-    <Command.List>
-        {#if results && Array.isArray(results)}
-            <Command.Group heading="Results">
-                {#each results as result (result.data.place_id)}
-                    <Command.Item>
-                        <div>
-                            <h3>{result.data.name}</h3>
-                            <p>{result.data.display_name}</p>
-                        </div>
-                        <Button onclick={() => placesManager.add(result)}
-                            >add</Button
-                        >
-                    </Command.Item>
-                {/each}
-            </Command.Group>
+    {#if !!query.error}
+        <Command.Item>
+            <Alert.Root variant="destructive" class="mt-2">
+                <AlertCircleIcon />
+                <Alert.Title>An error occurred</Alert.Title>
+                <Alert.Description>
+                    {query.error.message}
+                </Alert.Description>
+            </Alert.Root>
+        </Command.Item>
+    {/if}
+
+    {#if query.isLoading}
+        <Command.Loading class="p-2">
+            <Skeleton class="h-16 w-full mb-2" />
+            <Skeleton class="h-16 w-full mb-2" />
+            <Skeleton class="h-16 w-full mb-2" />
+            <Skeleton class="h-16 w-full" />
+        </Command.Loading>
+    {/if}
+
+    {#if query.data && Array.isArray(query.data)}
+        {#if query.data.length === 0}
+            <Command.Empty>No results found</Command.Empty>
         {:else}
+            <Command.List>
+                <Command.Group heading="Results">
+                    {#each query.data as result (result.data.place_id)}
+                        <Command.Item>
+                            <div>
+                                <h3>{result.data.name}</h3>
+                                <p>{result.data.display_name}</p>
+                            </div>
+                            <Button onclick={() => placesManager.add(result)}>
+                                add
+                            </Button>
+                        </Command.Item>
+                    {/each}
+                </Command.Group>
+            </Command.List>
+        {/if}
+    {/if}
+
+    {#if !query.data && !query.isLoading && !query.error}
+        <Command.List>
             <Command.Group heading="Suggested">
                 <Command.Item
                     role="button"
                     onclick={async () => {
-                        results = await placesManager.query("rome");
-                    }}>Rome</Command.Item
+                        query.isLoading = true;
+                        query = await placesManager.search("rome");
+                    }}
                 >
+                    Rome
+                </Command.Item>
                 <Command.Item
                     role="button"
                     onclick={async () => {
-                        results = await placesManager.query("london");
-                    }}>London</Command.Item
+                        query.isLoading = true;
+                        query = await placesManager.search("london");
+                    }}
                 >
+                    London
+                </Command.Item>
             </Command.Group>
-        {/if}
-    </Command.List>
+        </Command.List>
+    {/if}
 </Command.Dialog>
 
 <Button
@@ -75,5 +137,6 @@
     onclick={() => {
         open = !open;
     }}
-    >new
+>
+    new
 </Button>
