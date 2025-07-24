@@ -7,6 +7,7 @@
     import AlertCircleIcon from "@lucide/svelte/icons/alert-circle";
     import * as Alert from "$lib/components/ui/alert";
     import { Skeleton } from "$lib/components/ui/skeleton";
+    import PlaceItem from "./place-item.svelte";
 
     const OPEN_KEY = "k";
 
@@ -90,7 +91,7 @@
         </Command.Loading>
     {/if}
 
-    {#if query.data && Array.isArray(query.data)}
+    {#if query.data && Array.isArray(query.data) && !query.isLoading && !query.error}
         {#if query.data.length === 0}
             <Command.Empty>No results found</Command.Empty>
         {:else}
@@ -98,18 +99,7 @@
                 <Command.Group heading="Results">
                     {#each query.data as result (result.data.place_id)}
                         <Command.Item>
-                            <div>
-                                <h3>{result.data.name}</h3>
-                                <p>{result.data.display_name}</p>
-                            </div>
-                            <Button
-                                onclick={() => {
-                                    placesManager.add(result);
-                                    clearQuery();
-                                }}
-                            >
-                                add
-                            </Button>
+                            <PlaceItem place={result} {clearQuery} />
                         </Command.Item>
                     {/each}
                 </Command.Group>

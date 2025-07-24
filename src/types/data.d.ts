@@ -37,7 +37,4 @@ export interface IData {
 export interface IPlace {
     data: IData; // TODO: change to details?
     position: [number, number];
-    style: {
-        fillColor: `#${string}`;
-    };
 }

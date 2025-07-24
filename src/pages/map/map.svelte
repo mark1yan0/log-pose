@@ -13,26 +13,25 @@
         places: IPlace[] | null;
     } = $props();
 
-    let geojson: TGeoJSON | undefined = $state();
     let map: TMap | undefined = $state();
 
-    function style(_: unknown) {
+    function style(feature: {
+        properties: {
+            name: string;
+            style: {
+                fillColor: string;
+            };
+        };
+    }) {
         return {
             weight: 2,
             opacity: 1,
-            color: "black",
+            // border collor
+            color: "black", // TODO: dynamic
             dashArray: "3",
             fillOpacity: 0.4,
-            fillColor: "#542341",
+            fillColor: feature.properties.style.fillColor, // TODO: solve
         };
-    }
-
-    function onEachFeature(_: unknown, layer: Layer) {
-        layer.on({
-            mouseover: highlightFeature,
-            mouseout: resetHighlight,
-            click: zoomToFeature,
-        });
     }
 
     function highlightFeature(e: LeafletMouseEvent) {
@@ -40,7 +39,8 @@
 
         layer.setStyle({
             weight: 5,
-            color: "#666",
+            // border color
+            color: "#FFF",
             dashArray: "",
             fillOpacity: 0.7,
         });
@@ -49,11 +49,11 @@
     }
 
     function resetHighlight(e: LeafletMouseEvent) {
-        if (!geojson) {
+        if (!placesManager.geojson.instance) {
             return;
         }
 
-        geojson.resetStyle(e.target);
+        placesManager.geojson.instance.resetStyle(e.target);
     }
 
     function zoomToFeature(e: LeafletMouseEvent) {
@@ -62,6 +62,14 @@
         }
 
         map.fitBounds(e.target.getBounds());
+    }
+
+    function onEachFeature(_: unknown, layer: Layer) {
+        layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlight,
+            click: zoomToFeature,
+        });
     }
 </script>
 
@@ -95,17 +103,13 @@
                     '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
             }}
         />
-        {#if props.places && props.places.length > 0}
-            {#each props.places as place}
-                <GeoJSON
-                    bind:instance={geojson}
-                    json={place.countryShape}
-                    options={{
-                        style,
-                        onEachFeature,
-                    }}
-                />
-            {/each}
-        {/if}
+        <GeoJSON
+            bind:instance={placesManager.geojson.instance}
+            json={placesManager.getGeojson() as any}
+            options={{
+                style,
+                onEachFeature,
+            }}
+        />
     </Map>
 </div>
