@@ -6,7 +6,9 @@
     import { Button } from "$lib/components/ui/button/index.js";
 </script>
 
-<header class="flex items-center justify-between p-2">
+<header
+    class="flex items-center justify-between py-2 px-3 fixed top-1 left-0.5 right-1 z-[10000] bg-background rounded-xl opacity-90"
+>
     <h1>log:pose</h1>
 
     <div class="flex items-center gap-2">

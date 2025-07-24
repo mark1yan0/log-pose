@@ -77,7 +77,7 @@
     }
 </script>
 
-<div id="places-map" class="relative">
+<div id="places-map" class="w-screen h-screen relative">
     <Map
         options={{ center: [37.530697, 15.079602], zoom: 4 }}
         bind:instance={map}
@@ -117,11 +117,3 @@
         />
     </Map>
 </div>
-
-<style>
-    #places-map {
-        width: 100vw;
-        /* header height */
-        height: calc(100vh - 52px);
-    }
-</style>
