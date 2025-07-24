@@ -7,8 +7,11 @@
     import AlertCircleIcon from "@lucide/svelte/icons/alert-circle";
     import * as Alert from "$lib/components/ui/alert";
     import { Skeleton } from "$lib/components/ui/skeleton";
+    import { clear } from "node:console";
 
     const OPEN_KEY = "k";
+
+    const SUGGESTIONS = ["London", "Rome", "New York"];
 
     let open = $state(false);
 
@@ -26,23 +29,27 @@
         error: null,
     });
     let timer = $state<ReturnType<typeof setTimeout>>();
-    const debounced = async (v: string) => {
+    async function debounced(v: string) {
         clearTimeout(timer);
         timer = setTimeout(async () => {
             query.isLoading = true;
             query = await placesManager.search(v);
         }, 750);
-    };
+    }
 
-    const inputHandler = async (event: Event) => {
+    function clearQuery() {
+        query = {
+            isLoading: false,
+            data: null,
+            error: null,
+        };
+    }
+
+    async function inputHandler(event: Event) {
         const target = event.target as HTMLInputElement;
 
         if (!target.value) {
-            query = {
-                isLoading: false,
-                data: null,
-                error: null,
-            };
+            clearQuery();
             return;
         }
 
@@ -55,11 +62,12 @@
         }
 
         await debounced(target.value);
-    };
+    }
 </script>
 
 <svelte:document onkeydown={handleKeydown} />
 
+<!-- TODO: handle clear on close -->
 <Command.Dialog bind:open shouldFilter={false}>
     <Command.Input oninput={inputHandler} placeholder="Search place..." />
     {#if !!query.error}
@@ -95,7 +103,12 @@
                                 <h3>{result.data.name}</h3>
                                 <p>{result.data.display_name}</p>
                             </div>
-                            <Button onclick={() => placesManager.add(result)}>
+                            <Button
+                                onclick={() => {
+                                    placesManager.add(result);
+                                    clearQuery();
+                                }}
+                            >
                                 add
                             </Button>
                         </Command.Item>
@@ -108,24 +121,17 @@
     {#if !query.data && !query.isLoading && !query.error}
         <Command.List>
             <Command.Group heading="Suggested">
-                <Command.Item
-                    role="button"
-                    onclick={async () => {
-                        query.isLoading = true;
-                        query = await placesManager.search("rome");
-                    }}
-                >
-                    Rome
-                </Command.Item>
-                <Command.Item
-                    role="button"
-                    onclick={async () => {
-                        query.isLoading = true;
-                        query = await placesManager.search("london");
-                    }}
-                >
-                    London
-                </Command.Item>
+                {#each SUGGESTIONS as suggestion}
+                    <Command.Item
+                        role="button"
+                        onclick={async () => {
+                            query.isLoading = true;
+                            query = await placesManager.search(suggestion);
+                        }}
+                    >
+                        {suggestion}
+                    </Command.Item>
+                {/each}
             </Command.Group>
         </Command.List>
     {/if}
