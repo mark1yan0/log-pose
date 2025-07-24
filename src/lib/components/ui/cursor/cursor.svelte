@@ -53,7 +53,7 @@
         rounded-full border-dashed border-2 border-primary-foreground
         bg-primary mix-blend-difference pointer-events-none
         animate-spin animation-duration-[10s] animation-timing-function-ease-in-out
-        `, mouse.hovering ? 'w-[3rem] h-[3rem]' : 'w-[2rem] h-[2rem]')
+        `, mouse.hovering ? 'w-[3rem] h-[3rem]' : 'w-[1.5rem] h-[1.5rem]')
     }
 >
 </div>

@@ -4,9 +4,13 @@
     import PlacesMap from "$pages/map/map.svelte";
     import NewPlaceDialog from "$pages/map/new-place/new-place.svelte";
     import placesManager from "$services/places.svelte";
+
+    import Header from "./header.svelte";
 </script>
 
 <Cursor />
+
+<Header />
 
 <main>
     <PlacesMap places={placesManager.all()} />

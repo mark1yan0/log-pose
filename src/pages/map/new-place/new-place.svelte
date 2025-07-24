@@ -127,6 +127,7 @@
 </Command.Dialog>
 
 <Button
+    variant="secondary"
     command={OPEN_KEY}
     class="over-map bottom-6 right-2"
     onclick={() => {

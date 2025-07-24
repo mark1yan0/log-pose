@@ -29,7 +29,7 @@
             },
         },
         defaultVariants: {
-            variant: "outline",
+            variant: "default",
             size: "default",
         },
     });
@@ -48,7 +48,7 @@
 <script lang="ts">
     let {
         class: className,
-        variant = "outline",
+        variant = "default",
         size = "default",
         ref = $bindable(null),
         href = undefined,
