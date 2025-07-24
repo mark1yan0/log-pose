@@ -10,8 +10,24 @@
     let mouse = $state(defaultValues)
 
     function isHovering(target: EventTarget | null): target is HTMLButtonElement | HTMLInputElement | HTMLAnchorElement {
+        if (!(target instanceof HTMLElement)) {
+            return false
+        }
+
         const instances = [HTMLButtonElement, HTMLInputElement, HTMLAnchorElement]
-        return instances.some(instance => target instanceof instance)
+
+        // TODO: handle disabled buttons?
+
+        if (instances.some(instance => target instanceof instance)) {
+            return true
+        }
+
+        // TODO: handle geojson shapes, which is only a map layer (svg)
+        if (target.role === 'button') {
+            return true
+        }
+
+        return false
     }
 
     function initCursor<E extends HTMLDivElement>(cursor: E) {
@@ -22,11 +38,7 @@
             mouse.y = event.clientY - rect.height / 2
 
             if (isHovering(event.target)) {
-                if (event.target instanceof HTMLButtonElement && !event.target.disabled) {
-                    mouse.hovering = true
-                } else {
-                    mouse.hovering = true
-                }
+                mouse.hovering = true
             } else {
                 mouse.hovering = false
             }
@@ -49,11 +61,11 @@
         transition: width 0.2s ease-in-out, height 0.2s ease-in-out;
     `}
     class={twMerge(`
-         absolute top-[var(--y)] left-[var(--x)] z-[11000]
+        absolute top-[var(--y)] left-[var(--x)] z-[11000]
         rounded-full border-dashed border-2 border-primary-foreground
         bg-primary mix-blend-difference pointer-events-none
         animate-spin animation-duration-[10s] animation-timing-function-ease-in-out
-        `, mouse.hovering ? 'w-[3rem] h-[3rem]' : 'w-[1.5rem] h-[1.5rem]')
+        `, mouse.hovering ? 'w-[1.5rem] h-[1.5rem]' : 'w-[var(--cursor-size)] h-[var(--cursor-size)]')
     }
 >
 </div>

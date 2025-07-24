@@ -34,7 +34,7 @@
         };
     }
 
-    function highlightFeature(e: LeafletMouseEvent) {
+    function hoverShape(e: LeafletMouseEvent) {
         const layer = e.target;
 
         layer.setStyle({
@@ -45,18 +45,22 @@
             fillOpacity: 0.7,
         });
 
+        // update cursor size on mouseover
+        document.documentElement.style.setProperty("--cursor-size", "1.5rem");
         layer.bringToFront();
     }
 
-    function resetHighlight(e: LeafletMouseEvent) {
+    function outOfShape(e: LeafletMouseEvent) {
         if (!placesManager.geojson.instance) {
             return;
         }
 
+        // update cursor size on mouseout
+        document.documentElement.style.setProperty("--cursor-size", "2rem");
         placesManager.geojson.instance.resetStyle(e.target);
     }
 
-    function zoomToFeature(e: LeafletMouseEvent) {
+    function onShapeClick(e: LeafletMouseEvent) {
         if (!map) {
             return;
         }
@@ -66,14 +70,14 @@
 
     function onEachFeature(_: unknown, layer: Layer) {
         layer.on({
-            mouseover: highlightFeature,
-            mouseout: resetHighlight,
-            click: zoomToFeature,
+            mouseover: hoverShape,
+            mouseout: outOfShape,
+            click: onShapeClick,
         });
     }
 </script>
 
-<div id="places-map" class="w-screen h-screen relative">
+<div id="places-map" class="relative">
     <Map
         options={{ center: [37.530697, 15.079602], zoom: 4 }}
         bind:instance={map}
@@ -113,3 +117,11 @@
         />
     </Map>
 </div>
+
+<style>
+    #places-map {
+        width: 100vw;
+        /* header height */
+        height: calc(100vh - 52px);
+    }
+</style>
