@@ -8,6 +8,7 @@
     } from "leaflet";
     import type { IPlace } from "$types/data";
     import placesManager from "$services/places.svelte";
+    import mapConfig from "$lib/constants/map";
 
     const props: {
         places: IPlace[] | null;
@@ -100,11 +101,10 @@
             {/each}
         {/if}
         <TileLayer
-            url={"https://tile.openstreetmap.org/{z}/{x}/{y}.png"}
+            url={mapConfig.url}
             options={{
                 maxZoom: 19,
-                attribution:
-                    '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                attribution: mapConfig.attribution,
             }}
         />
         <GeoJSON

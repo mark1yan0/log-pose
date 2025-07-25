@@ -3,6 +3,7 @@ import type { GeoJSON } from "leaflet";
 import { toast } from "svelte-sonner";
 import countries from "../assets/countries.geo.json";
 import type { IQuery } from "$types/query";
+import apiEndpoints from "$lib/constants/api";
 
 class PlacesManager {
     private static instance: PlacesManager;
@@ -37,16 +38,13 @@ class PlacesManager {
         }
 
         try {
-            const res = await fetch(
-                `https://nominatim.openstreetmap.org/search?q=${q}&format=json&addressdetails=1`,
-                {
-                    method: "get",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept-Language": "en",
-                    },
+            const res = await fetch(apiEndpoints.geocoding(q), {
+                method: "get",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept-Language": "en",
                 },
-            );
+            });
 
             const data: IData[] = await res.json();
 
