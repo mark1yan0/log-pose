@@ -1,10 +1,18 @@
 <script lang="ts">
-    import { Map, TileLayer, GeoJSON, Marker, Popup } from "sveaflet";
+    import {
+        Map,
+        TileLayer,
+        GeoJSON,
+        Marker,
+        Popup,
+        ControlZoom,
+    } from "sveaflet";
     import type { Layer, Map as TMap, LeafletMouseEvent } from "leaflet";
     import type { IPlace } from "$types/data";
     import placesManager from "$services/places.svelte";
     import MarkerIcon from "$lib/components/map/marker-icon.svelte";
     import defaults from "$lib/constants/defaults";
+    import { withMap } from "$lib/utils";
 
     const props: {
         places: IPlace[] | null;
@@ -76,12 +84,21 @@
 
 <div id="places-map" class="w-screen h-screen relative">
     <Map
-        options={{ center: defaults.map.center, zoom: defaults.map.zoom }}
+        options={{
+            center: defaults.map.center,
+            zoom: defaults.map.zoom,
+            zoomControl: false,
+        }}
         bind:instance={map}
     >
+        <ControlZoom options={{ position: "bottomleft" }} />
         {#if props.places && props.places.length > 0}
             {#each props.places as place}
                 <Marker
+                    onclick={() =>
+                        withMap(map, (m) => {
+                            m.flyTo(place.position, 8);
+                        })}
                     latLng={place.position}
                     options={{
                         riseOnHover: true,

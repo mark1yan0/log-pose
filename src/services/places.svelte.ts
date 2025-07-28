@@ -195,4 +195,5 @@ class PlacesManager {
     }
 }
 
-export default PlacesManager.getInstance();
+const placesManager = PlacesManager.getInstance();
+export default placesManager;

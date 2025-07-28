@@ -99,7 +99,6 @@
 <div class="flex justify-end">
     <Button
         onclick={() => {
-            // TODO: cannot chose color if is from the same country
             placesManager.add(place, {
                 style: { fillColor: color },
                 marker,
