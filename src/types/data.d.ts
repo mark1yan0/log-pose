@@ -2,7 +2,7 @@
 export interface IData {
     address: {
         "ISO3166-2-lvl4": string;
-        "ISO3166-2-lvl6": string;
+        "ISO3166-2-lvl6"?: string;
         borough?: string;
         city: string;
         country: string;
@@ -17,6 +17,7 @@ export interface IData {
         suburb?: string;
         district?: string;
         municipality?: string;
+        state_district?: string;
     };
     addresstype: string;
     boundingbox: string[];
