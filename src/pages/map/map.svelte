@@ -1,14 +1,10 @@
 <script lang="ts">
     import { Map, TileLayer, GeoJSON, Marker, Popup } from "sveaflet";
-    import type {
-        GeoJSON as TGeoJSON,
-        Layer,
-        Map as TMap,
-        LeafletMouseEvent,
-    } from "leaflet";
+    import type { Layer, Map as TMap, LeafletMouseEvent } from "leaflet";
     import type { IPlace } from "$types/data";
     import placesManager from "$services/places.svelte";
-    import mapConfig from "$lib/constants/map";
+    import MarkerIcon from "$lib/components/map/marker-icon.svelte";
+    import defaults from "$lib/constants/defaults";
 
     const props: {
         places: IPlace[] | null;
@@ -31,7 +27,7 @@
             color: "black", // TODO: dynamic
             dashArray: "3",
             fillOpacity: 0.4,
-            fillColor: feature.properties.style.fillColor, // TODO: solve
+            fillColor: feature.properties.style.fillColor,
         };
     }
 
@@ -80,7 +76,7 @@
 
 <div id="places-map" class="w-screen h-screen relative">
     <Map
-        options={{ center: [37.530697, 15.079602], zoom: 4 }}
+        options={{ center: defaults.map.center, zoom: defaults.map.zoom }}
         bind:instance={map}
     >
         {#if props.places && props.places.length > 0}
@@ -91,6 +87,7 @@
                         riseOnHover: true,
                     }}
                 >
+                    <MarkerIcon contained marker={place.marker.icon} />
                     <Popup>
                         <h3>{place.data.name}</h3>
                         <button onclick={() => placesManager.delete(place)}>
@@ -101,10 +98,10 @@
             {/each}
         {/if}
         <TileLayer
-            url={mapConfig.url}
+            url={defaults.map.url}
             options={{
-                maxZoom: 19,
-                attribution: mapConfig.attribution,
+                maxZoom: defaults.map.maxZoom,
+                attribution: defaults.map.attribution,
             }}
         />
         <GeoJSON

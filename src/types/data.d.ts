@@ -37,4 +37,19 @@ export interface IData {
 export interface IPlace {
     data: IData; // TODO: change to details?
     position: [number, number];
+    marker: IMarker;
+}
+
+// map markers
+export type TMarkerIcon = "pin" | "city" | "sea" | "mountains";
+
+export interface IMarker {
+    icon: TMarkerIcon;
+    color: string;
+    label: string;
+}
+
+export interface IPlaceOptions {
+    style?: { fillColor: color };
+    marker?: IMarker;
 }

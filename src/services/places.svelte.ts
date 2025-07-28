@@ -1,4 +1,4 @@
-import type { IData, IPlace } from "$types/data";
+import type { IData, IMarker, IPlace, IPlaceOptions } from "$types/data";
 import type { GeoJSON } from "leaflet";
 import { toast } from "svelte-sonner";
 import countries from "../assets/countries.geo.json";
@@ -9,6 +9,11 @@ class PlacesManager {
     private static instance: PlacesManager;
     private key = "logpose:data";
     private places: IPlace[] = $state(this.persisted().places);
+    private defaultMarker: IMarker = {
+        icon: "pin",
+        color: "blue", // TODO:
+        label: "Pin",
+    };
 
     public geojson: {
         instance: GeoJSON | undefined;
@@ -54,6 +59,7 @@ class PlacesManager {
                 data: data.map<IPlace>((d) => ({
                     position: this.getMarkerPosition(d),
                     data: d,
+                    marker: this.defaultMarker,
                 })),
             };
         } catch (error) {
@@ -73,7 +79,11 @@ class PlacesManager {
         return this.places;
     }
 
-    public add(place: IPlace, config?: { style: { fillColor: string } }) {
+    public add(place: IPlace, config?: IPlaceOptions) {
+        if (config?.marker) {
+            place.marker = config.marker;
+        }
+
         this.places.push(place);
 
         this.updateGeoJSON(place, config);
@@ -149,10 +159,7 @@ class PlacesManager {
         return [parseFloat(place.lat), parseFloat(place.lon)];
     }
 
-    private updateGeoJSON(
-        place: IPlace,
-        config?: { style: { fillColor: string } },
-    ) {
+    private updateGeoJSON(place: IPlace, config?: IPlaceOptions) {
         if (
             !this.geojson.instance ||
             this.geojson.shapes.find(

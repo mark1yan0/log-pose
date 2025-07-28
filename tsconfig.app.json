@@ -17,6 +17,8 @@
         "moduleDetection": "force",
         "baseUrl": ".",
         "paths": {
+            "$assets": ["./src/assets"],
+            "$assets/*": ["./src/assets/*"],
             "$services": ["./src/services"],
             "$services/*": ["./src/services/*"],
             "$types": ["./src/types"],

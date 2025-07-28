@@ -8,6 +8,7 @@ export default defineConfig({
     plugins: [tailwindcss(), svelte()],
     resolve: {
         alias: {
+            $assets: path.resolve("./src/assets"),
             $services: path.resolve("./src/services"),
             $types: path.resolve("./src/types"),
             $lib: path.resolve("./src/lib"),
