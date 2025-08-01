@@ -1,18 +1,8 @@
-import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite";
-import { svelte } from "@sveltejs/vite-plugin-svelte";
-import path from "node:path";
+import devtoolsJson from 'vite-plugin-devtools-json';
+import tailwindcss from '@tailwindcss/vite';
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
 
-// https://vite.dev/config/
 export default defineConfig({
-    plugins: [tailwindcss(), svelte()],
-    resolve: {
-        alias: {
-            $assets: path.resolve("./src/assets"),
-            $services: path.resolve("./src/services"),
-            $types: path.resolve("./src/types"),
-            $lib: path.resolve("./src/lib"),
-            $pages: path.resolve("./src/pages"),
-        },
-    },
+	plugins: [tailwindcss(), sveltekit(), devtoolsJson()]
 });
