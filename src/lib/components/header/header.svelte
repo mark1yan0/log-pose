@@ -4,6 +4,7 @@
 
 	import { toggleMode } from 'mode-watcher';
 	import { Button } from '$lib/components/ui/button/index.js';
+	import { Link } from '../ui/link';
 </script>
 
 <header
@@ -11,10 +12,14 @@
 >
 	<h1>log:pose</h1>
 
-	<div class="flex items-center gap-2">
-		<nav>navigation</nav>
+	<div class="flex items-center gap-6">
+		<nav class="flex items-center gap-6">
+			<Link aria-label="Go to map" href="/">Map</Link>
+			<Link aria-label="Go to overview" href="/overview">Overview</Link>
+			<Link aria-label="Go to about" href="/about">About</Link>
+		</nav>
 
-		<Button onclick={toggleMode} variant="outline" size="icon">
+		<Button aria-label="Toggle theme" onclick={toggleMode} variant="outline" size="icon">
 			<SunIcon
 				class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 !transition-all dark:scale-0 dark:-rotate-90"
 			/>

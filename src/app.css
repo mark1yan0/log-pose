@@ -121,6 +121,9 @@
 }
 
 /* Utilities */
+.main-page-container {
+	@apply mx-auto mt-16 max-w-2xl px-4 pb-4;
+}
 
 .over-map {
 	@apply absolute z-[1000];
