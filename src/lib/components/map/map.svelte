@@ -87,7 +87,7 @@
 	>
 		<ControlZoom options={{ position: 'bottomleft' }} />
 		{#if props.places && props.places.length > 0}
-			{#each props.places as place}
+			{#each props.places as place (place.data.place_id)}
 				<Marker
 					onclick={() =>
 						withMap(map, (m) => {
