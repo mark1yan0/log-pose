@@ -7,7 +7,7 @@
         Popup,
         ControlZoom
     } from 'sveaflet';
-    import { type Layer, type Map as TMap, type LeafletMouseEvent, GeoJSON } from 'leaflet';
+    import { type Layer, type Map as TMap, type LeafletMouseEvent } from 'leaflet';
     import type { IPlace } from '$lib/types/data';
     import placesManager from '$lib/services/places.svelte';
     import MarkerIcon from '$lib/components/map/marker-icon.svelte';
@@ -18,12 +18,20 @@
     import { type ICountry } from '../../services/db';
     import { liveQuery } from 'dexie';
 
+    // TODO: use new api for markers
     const props: {
         places: IPlace[] | null;
     } = $props();
 
     let map = $state<TMap | undefined>();
-    let geojson = $state<GeoJSON | undefined>();
+    let geojson = $state<
+        | {
+              clearLayers: () => void;
+              addData: (data: { type: 'FeatureCollection'; features: ICountry[] }) => void;
+              resetStyle: (layer: unknown) => void;
+          }
+        | undefined
+    >();
     let countries = liveQuery(async () => await countriesManager.all());
 
     // update ui on liveQuery changes
@@ -59,17 +67,21 @@
     }
 
     function outOfShape(e: LeafletMouseEvent) {
+        // TODO: make a generic assertin with error handling
+        if (!geojson) {
+            return;
+        }
         const layer = e.target;
-        // if (!placesManager.geojson.instance) {
-        //     return;
-        // }
 
-        // TODO: see how to handle
-        layer.setStyle(defaults.countries.styles.default);
+        if (layer.feature.properties.saved) {
+            geojson.resetStyle(layer);
+            layer.setStyle(layer.feature.properties.style);
+        } else {
+            layer.setStyle(defaults.countries.styles.default);
+        }
 
         // update cursor size on mouseout
         document.documentElement.style.setProperty('--cursor-size', '2rem');
-        // placesManager.geojson.instance.resetStyle(e.target);
     }
 
     function onShapeClick(e: LeafletMouseEvent) {
