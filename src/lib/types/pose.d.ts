@@ -1,7 +1,17 @@
 /**
- * @deprecated
+ * Interface of a saved country
  */
-export interface IData {
+export interface IPose {
+    places: IPlace[];
+    style: {
+        fillColor: string | null;
+        borderColor: string | null;
+    };
+    created_at: string;
+    updated_at: string;
+}
+
+export interface IPlaceDetails {
     address: {
         'ISO3166-2-lvl4': string;
         'ISO3166-2-lvl6'?: string;
@@ -37,11 +47,8 @@ export interface IData {
     type: string;
 }
 
-/**
- * @deprecated
- */
 export interface IPlace {
-    data: IData; // TODO: change to details?
+    details: IPlaceDetails;
     position: [number, number];
     marker: IMarker;
 }
