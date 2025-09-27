@@ -44,5 +44,9 @@ You can preview the production build with `npm run preview`.
 - [ ] refactor layout. remove header and non needed routes
 - [ ] remove unused components
 - [ ] add an islan with buttons to print and setting
-- [ ] settings page with dashboard and data export/inport
+- [ ] settings page
+    - [x] export/inport
+        - [ ] cancel option
+    - [ ] ui
 - [ ] solve ts errors
+- [ ] review and standardize all toeast messages

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { exportDatabase, importIntoDatabase } from '$lib/services/db/utils';
+	import { exportDatabase } from '$lib/services/db/sync/export';
+	import { importIntoDatabase } from '$lib/services/db/sync/import';
 
 	let file: File | null = null;
 	let status: string = '';

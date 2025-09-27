@@ -1,5 +1,5 @@
 import { exportDB, importInto } from 'dexie-export-import';
-import { db } from '../db';
+import { db } from '..';
 
 // Message handler
 self.onmessage = async (event: MessageEvent) => {
@@ -7,11 +7,9 @@ self.onmessage = async (event: MessageEvent) => {
 
 	try {
 		if (action === 'export') {
-			console.log('export started');
 			const blob = await exportDB(db);
 			const arrayBuffer = await blob.arrayBuffer();
-			(self as any).postMessage({ action: 'export-done', payload: arrayBuffer }, [arrayBuffer]);
-			console.log('export done');
+			self.postMessage({ action: 'export-done', payload: arrayBuffer }, [arrayBuffer]);
 		}
 
 		if (action === 'import') {
@@ -19,9 +17,11 @@ self.onmessage = async (event: MessageEvent) => {
 			await db.countries.clear();
 			await db.coordinates.clear();
 			await importInto(db, blob);
-			(self as any).postMessage({ action: 'import-done' });
+			self.postMessage({ action: 'import-done' });
 		}
-	} catch (err: any) {
-		(self as any).postMessage({ action: 'error', payload: err.message });
+	} catch (err) {
+		if (err instanceof Error) {
+			self.postMessage({ action: 'error', payload: err.message });
+		}
 	}
 };
