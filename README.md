@@ -50,3 +50,4 @@ You can preview the production build with `npm run preview`.
     - [ ] ui
 - [ ] solve ts errors
 - [ ] review and standardize all toeast messages
+- [ ] solve navigation selected for settings

@@ -4,6 +4,7 @@ const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'modu
 // TODO: handle error
 // Export
 export function exportDatabase() {
+	let opened: string | number = '';
 	return new Promise<ArrayBuffer>((resolve, reject) => {
 		worker.onmessage = (event) => {
 			const { action, payload } = event.data;
@@ -16,6 +17,7 @@ export function exportDatabase() {
 				a.download = 'logpose_db.json';
 				a.click();
 
+				toast.dismiss(opened);
 				toast.success('Database exported successfully!');
 				URL.revokeObjectURL(url);
 				resolve(payload);
@@ -24,7 +26,7 @@ export function exportDatabase() {
 		};
 
 		// start event
-		toast.info('Database export started...', {
+		opened = toast.info('Database export started...', {
 			duration: Infinity
 			// action: { TODO
 			// 	label: 'Cancel',

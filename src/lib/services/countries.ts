@@ -153,6 +153,11 @@ class CountriesManager {
 			toast.error(`Failed to save country ${c.properties.name}`);
 		}
 	}
+
+	public async countSaved() {
+		// TODO: Implement countSaved method
+		return await db.countries.where('saved').equals('true').count();
+	}
 }
 
 const countriesManager = CountriesManager.getInstance();
