@@ -3,8 +3,7 @@
 	import { onMount } from 'svelte';
 	import { ModeWatcher } from 'mode-watcher';
 	import favicon from '$lib/assets/favicon.svg';
-	import Cursor from '$lib/components/ui/cursor/cursor.svelte';
-	import Header from '$lib/components/header/header.svelte';
+	import Header from '$lib/components/header.svelte';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import countriesManager from '$lib/services/countries.svelte';
 
@@ -21,8 +20,6 @@
 </svelte:head>
 
 <ModeWatcher />
-
-<!-- <Cursor /> -->
 
 <Header />
 
