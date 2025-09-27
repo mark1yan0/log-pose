@@ -1,63 +1,158 @@
-import countries from '$lib/assets/countries.geo.json';
-import { db, type ICountry } from './db';
+import source from '$lib/assets/countries.geo.v2.json';
+import { toast } from 'svelte-sonner';
+import {
+	db,
+	type ICoordinateModel,
+	type ICountry,
+	type ICountryModel,
+	type ICountrySource
+} from './db';
 
 class CountriesManager {
-    private static instance: CountriesManager;
-    constructor() {}
+	private static instance: CountriesManager;
+	constructor() {}
 
-    public static getInstance(): CountriesManager {
-        if (!CountriesManager.instance) {
-            CountriesManager.instance = new CountriesManager();
-        }
-        return CountriesManager.instance;
-    }
+	public static getInstance(): CountriesManager {
+		if (!CountriesManager.instance) {
+			CountriesManager.instance = new CountriesManager();
+		}
+		return CountriesManager.instance;
+	}
 
-    /**
-     * Initializes map with Countries
-     * If not already set, adds coutries to indexedDB from a file
-     * On initial load, no countries are selected
-     */
-    public async init() {
-        if ((await db.countries.count()) > 0) {
-            console.log('Countries already filled');
-            return;
-        }
+	/**
+	 * Initializes map Countries and Coordinates DB
+	 * If not already set, seeds coutries to indexedDB from a file
+	 * On initial load, no countries are selected
+	 */
+	public async init() {
+		if ((await db.countries.count()) > 0) {
+			console.log('Countries already filled');
+			return;
+		}
 
-        const enriched = countries.features.map((f) => ({
-            ...f,
-            properties: {
-                ...f.properties,
-                places: [],
-                saved: false,
-                style: null,
-                created_at: null,
-                updated_at: null
-            }
-        }));
-        await db.countries.bulkAdd(enriched as ICountry[]);
-    }
+		const parsedCountries: Omit<ICountryModel, 'id'>[] = [];
+		const parsedCoords: Omit<ICoordinateModel, 'id'>[] = [];
 
-    public async geojson() {
-        const features = await this.all();
-        return {
-            type: 'FeatureCollection',
-            features
-        };
-    }
-    public async all() {
-        return await db.countries.toArray();
-    }
+		const features = source.features as ICountrySource[];
+		features.forEach((f, i) => {
+			parsedCountries.push({
+				...f,
+				geometry: {
+					type: f.geometry.type
+				},
+				properties: {
+					name: f.properties.NAME,
+					saved: false,
+					style: null,
+					created_at: null,
+					updated_at: null
+				}
+			});
 
-    public async getById(id: string) {
-        return await db.countries.get(id);
-    }
+			parsedCoords.push({
+				countryId: i + 1,
+				data: f.geometry.coordinates
+			});
+		});
 
-    /**
-     * All countires are already in the db. This method updates the specific country properties
-     */
-    public async add(id: string, c: ICountry) {
-        await db.countries.update(id, c);
-    }
+		await db.countries.bulkAdd(parsedCountries);
+		await db.coordinates.bulkAdd(parsedCoords);
+	}
+
+	public async geojson() {
+		const features = await this.all();
+		return {
+			type: 'FeatureCollection',
+			features
+		};
+	}
+
+	// TODO: implement some caching
+	public async all() {
+		// handled like this because coords where giving errors on record updates
+		const countries = await db.countries.toArray();
+		const coords = await db.coordinates.toArray();
+
+		return countries.map((country) => ({
+			...country,
+			geometry: {
+				type: country.geometry.type,
+				coordinates: coords.find((c) => c.countryId === country.id)?.data || []
+			}
+		}));
+	}
+
+	// TODO: error handling
+	public async getById(id: number) {
+		const found = await db.countries.get(id);
+
+		if (!found) {
+			throw new Error(`Country with id ${id} not found`);
+		}
+
+		const coords = await db.coordinates.where('countryId').equals(id).first();
+
+		if (!coords) {
+			throw new Error(`Coordinates for country with id ${id} not found`);
+		}
+
+		return {
+			...found,
+			geometry: {
+				type: found.geometry.type,
+				coordinates: coords.data
+			}
+		};
+	}
+
+	/**
+	 * All countires are already in the db. This method updates the specific country properties
+	 */
+	public async save(c: ICountry | null) {
+		try {
+			if (!c) {
+				throw new Error('No selected country to save found');
+			}
+
+			await db.countries.update(c.id, {
+				properties: {
+					...c.properties,
+					saved: true,
+					created_at: new Date().toISOString(),
+					updated_at: new Date().toISOString(),
+					style: {
+						fillColor: '#2596be'
+					}
+				}
+			});
+			toast.success(`Country ${c.properties.name} saved`);
+		} catch (error) {
+			console.error(error);
+			toast.error(`Failed to save country ${c.properties.name}`);
+		}
+	}
+
+	public async delete(c: ICountry | null) {
+		try {
+			if (!c) {
+				throw new Error('No selected country to delete found');
+			}
+
+			await db.countries.update(c.id, {
+				properties: {
+					...c.properties,
+					saved: false,
+					created_at: null,
+					updated_at: null,
+					style: null
+				}
+			});
+			toast.success(`Country ${c.properties.name} deleted`);
+		} catch (error) {
+			console.error(error);
+			toast.error(`Failed to save country ${c.properties.name}`);
+		}
+	}
 }
 
 const countriesManager = CountriesManager.getInstance();

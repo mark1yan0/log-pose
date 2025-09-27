@@ -37,6 +37,10 @@
 	--sidebar-accent-foreground: oklch(0.208 0.042 265.755);
 	--sidebar-border: oklch(0.929 0.013 255.508);
 	--sidebar-ring: oklch(0.704 0.04 256.788);
+
+	/**/
+
+	--cursor-size: 4rem;
 }
 
 .dark {
@@ -113,12 +117,27 @@
 
 @layer base {
 	* {
-		@apply !cursor-none border-border outline-ring/50;
+		@apply border-border outline-ring/50; /* !cursor-none */
 	}
 	body {
 		@apply bg-background text-foreground;
 	}
 }
+
+/* CURSOR */
+
+/*.cursor {
+	height: var(--cursor-size);
+	width: var(--cursor-size);
+	transition:
+		width 0.2s ease-in-out 10s,
+		height 0.2s ease-in-out 10s;
+	@apply pointer-events-none absolute top-[var(--y)] left-[var(--x)] z-[11000] rounded-full border-2 border-dashed border-primary-foreground bg-primary mix-blend-difference;
+}*/
+
+/*.cursor-hovering {
+	@apply h-[2rem] w-[2rem];
+}*/
 
 /* Utilities */
 .main-page-container {
