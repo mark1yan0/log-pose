@@ -5,7 +5,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import Header from '$lib/components/header.svelte';
 	import { Toaster } from '$lib/components/ui/sonner';
-	import countriesManager from '$lib/services/countries.svelte';
+	import countriesManager from '$lib/services/countries.ts';
 
 	let { children } = $props();
 

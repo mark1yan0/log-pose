@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
-	import countriesManager from '$lib/services/countries.svelte';
+	import countriesManager from '$lib/services/countries.ts';
 	import type { ICountry } from '$lib/services/db/index';
 	import type { Map } from 'leaflet';
 

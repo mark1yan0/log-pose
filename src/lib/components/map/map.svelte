@@ -3,7 +3,7 @@
 	import { type Layer, type Map as TMap, type LeafletMouseEvent } from 'leaflet';
 	// import MarkerIcon from '$lib/components/map/marker-icon.svelte';
 	import defaults from '$lib/constants/defaults';
-	import countriesManager from '$lib/services/countries.svelte';
+	import countriesManager from '$lib/services/countries';
 	import { liveQuery } from 'dexie';
 	import CountryModal from './modal/country-modal.svelte';
 	import type { ICountry } from '$lib/services/db';
