@@ -1,20 +1,12 @@
 <script lang="ts">
-	import { Map, GeoJSON as GeoJSONComponent, Marker, Popup, ControlZoom } from 'sveaflet';
+	import { Map, GeoJSON as GeoJSONComponent, ControlZoom } from 'sveaflet';
 	import { type Layer, type Map as TMap, type LeafletMouseEvent } from 'leaflet';
-	import type { IPlace } from '$lib/types/data';
-	import placesManager from '$lib/services/places.svelte';
-	import MarkerIcon from '$lib/components/map/marker-icon.svelte';
+	// import MarkerIcon from '$lib/components/map/marker-icon.svelte';
 	import defaults from '$lib/constants/defaults';
-	import { withMap } from '$lib/utils';
 	import countriesManager from '$lib/services/countries.svelte';
 	import { liveQuery } from 'dexie';
 	import CountryModal from './modal/country-modal.svelte';
 	import type { ICountry } from '$lib/services/db';
-
-	// TODO: use new api for markers
-	const props: {
-		places: IPlace[] | null;
-	} = $props();
 
 	let map = $state<TMap | undefined>();
 	let geojson = $state<
@@ -108,7 +100,7 @@
 		bind:instance={map}
 	>
 		<ControlZoom options={{ position: 'bottomleft' }} />
-		{#if props.places && props.places.length > 0}
+		<!-- {#if props.places && props.places.length > 0}
 			{#each props.places as place (place.data.place_id)}
 				<Marker
 					onclick={() =>
@@ -127,7 +119,7 @@
 					</Popup>
 				</Marker>
 			{/each}
-		{/if}
+		{/if} -->
 		<!-- <TileLayer
 			url={defaults.map.url}
 			options={{

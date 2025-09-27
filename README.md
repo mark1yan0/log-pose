@@ -36,3 +36,13 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+# TODO
+
+- [ ] remove places related code for now
+- [ ] handle modal with values for colors ecc for a country
+- [ ] refactor layout. remove header and non needed routes
+- [ ] remove unused components
+- [ ] add an islan with buttons to print and setting
+- [ ] settings page with dashboard and data export/inport
+- [ ] solve ts errors

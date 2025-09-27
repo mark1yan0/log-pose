@@ -1,9 +1,8 @@
 <script lang="ts">
-    import PlacesMap from '$lib/components/map/map.svelte';
-    import placesManager from '$lib/services/places.svelte';
+	// TODO: rename
+	import Map from '$lib/components/map/map.svelte';
 </script>
 
-<!-- TODO: remove places? -->
 <main>
-    <PlacesMap places={placesManager.all()} />
+	<Map />
 </main>
