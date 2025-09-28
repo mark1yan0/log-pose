@@ -156,7 +156,7 @@ class CountriesManager {
 
 	public async countSaved() {
 		// TODO: Implement countSaved method
-		return await db.countries.where('saved').equals('true').count();
+		return await db.countries.filter((m) => m.properties.saved).count();
 	}
 }
 

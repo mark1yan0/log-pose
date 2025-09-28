@@ -16,7 +16,11 @@
 		<Button variant="outline" aria-label="Go to map" href="/">
 			<MapIcon />
 		</Button>
-		<Button variant="outline" aria-label="Go to settings" href="/settings/dashboard">
+		<Button class="justify-start" variant="outline" href="/dashboard" aria-label="Go to dashboard">
+			Dashboard
+		</Button>
+
+		<Button variant="outline" aria-label="Go to settings" href="/settings/sync">
 			<SettingsIcon />
 		</Button>
 
