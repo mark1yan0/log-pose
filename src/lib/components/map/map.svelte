@@ -31,33 +31,29 @@
 		});
 	});
 
-	function getCorrectStyle(feature: ICountry) {
+	function style(feature: ICountry) {
 		if (feature.properties.saved && feature.properties.style) {
 			return feature.properties.style;
 		}
 		return defaults.countries.styles.default;
 	}
 
-	function style(feature: ICountry) {
-		return getCorrectStyle(feature);
-	}
-
-	function hoverShape(e: LeafletMouseEvent) {
-		const layer = e.target;
+	function hoverShape(ev: LeafletMouseEvent) {
+		const layer = ev.target;
 
 		layer.setStyle(defaults.countries.styles.hover);
 
 		// update cursor size on mouseover
-		document.documentElement.style.setProperty('--cursor-size', '2rem');
+		// document.documentElement.style.setProperty('--cursor-size', '2rem');
 		layer.bringToFront();
 	}
 
-	function outOfShape(e: LeafletMouseEvent) {
+	function outOfShape(ev: LeafletMouseEvent) {
 		// TODO: make a generic assertin with error handling
 		if (!geojson) {
 			return;
 		}
-		const layer = e.target;
+		const layer = ev.target;
 
 		if (layer.feature.properties.saved) {
 			geojson.resetStyle(layer);
@@ -67,7 +63,7 @@
 		}
 
 		// update cursor size on mouseout
-		document.documentElement.style.setProperty('--cursor-size', '4rem');
+		// document.documentElement.style.setProperty('--cursor-size', '4rem');
 	}
 
 	let selected = $state<ICountry | null>(null);
