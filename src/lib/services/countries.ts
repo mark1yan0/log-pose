@@ -115,12 +115,15 @@ class CountriesManager {
 				throw new Error('No selected country to save found');
 			}
 
-			// const fill = c.properties.style.fillColor === defaults.countries.styles.default.fillColor ? '#2596be' :
+			let createdAt = new Date().toISOString();
+			if (c.properties.saved) {
+				createdAt = c.properties.created_at as string;
+			}
 			await db.countries.update(c.id, {
 				properties: {
 					...c.properties,
 					saved: true,
-					created_at: new Date().toISOString(),
+					created_at: createdAt,
 					updated_at: new Date().toISOString(),
 					style: {
 						...c.properties.style

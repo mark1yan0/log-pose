@@ -5,18 +5,41 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import configurator from '$lib/services/configurator.svelte';
 	import countriesManager from '$lib/services/countries';
+	import { Slider } from '$lib/components/ui/slider/index.js';
 
-	let isNew = $derived(!configurator.draft?.properties.saved);
+	if (!configurator.draft) {
+		throw new Error('no draft');
+	}
 
+	let isNew = $derived(!configurator.draft.properties.saved);
+
+	let bColor = $state(configurator.draft.properties.style.color);
+	let fColor = $state(configurator.draft.properties.style.fillColor);
+	// let b = $state(configurator.draft?.properties.style.dashArray)
+	let fOpacity = $state(configurator.draft.properties.style.fillOpacity);
+	let bWeight = $state(configurator.draft.properties.style.weight);
+	let bOpacity = $state(configurator.draft.properties.style.opacity);
 	// TODO: on change, preview must update
-	let values = $state(configurator.draft?.properties.style);
 
 	async function confirmHandler() {
 		if (!configurator.draft) {
 			return;
 		}
 
-		await countriesManager.save(configurator.draft);
+		await countriesManager.save({
+			...configurator.draft,
+			properties: {
+				...configurator.draft.properties,
+				style: {
+					color: bColor,
+					fillColor: fColor,
+					fillOpacity: fOpacity,
+					weight: bWeight,
+					opacity: bOpacity,
+					dashArray: 3 // TODO
+				}
+			}
+		});
 		configurator.close();
 	}
 
@@ -28,6 +51,8 @@
 		await countriesManager.delete(configurator.draft);
 		configurator.close();
 	}
+
+	// TODO: organize ui
 </script>
 
 <div class="flex flex-col gap-2">
@@ -38,14 +63,63 @@
 
 	<div>
 		<Field.Set class="grid grid-cols-2">
-			{#each configurator.fields as field (field.label)}
-				<Field.Group>
-					<Field.Field>
-						<Field.Label for={field.label}>{field.label}</Field.Label>
-						<Input type={field.type} bind:value={values[field.label]} id={field.label} />
-					</Field.Field>
-				</Field.Group>
-			{/each}
+			<Field.Group>
+				<Field.Field>
+					<Field.Label for="color">Broder color</Field.Label>
+					<Input type="color" bind:value={bColor} id="color" />
+				</Field.Field>
+				<Field.Field>
+					<Field.Label for="fillColor">Fill color</Field.Label>
+					<Input type="color" bind:value={fColor} id="fillColor" />
+				</Field.Field>
+			</Field.Group>
+			<Field.Group>
+				<Field.Field>
+					<Field.Label for="opacity">
+						Border opacity
+						<span class="ml-1">{bOpacity}</span>
+					</Field.Label>
+					<Slider
+						type="single"
+						bind:value={bOpacity}
+						max={1}
+						min={0}
+						step={0.1}
+						class="mt-2 w-full"
+						aria-label="Range"
+					/>
+				</Field.Field>
+				<Field.Field>
+					<Field.Label for="fOpacity">
+						Fill opacity
+						<span class="ml-1">{fOpacity}</span>
+					</Field.Label>
+					<Slider
+						type="single"
+						bind:value={fOpacity}
+						max={1}
+						min={0}
+						step={0.1}
+						class="mt-2 w-full"
+						aria-label="TODO: Range"
+					/>
+				</Field.Field>
+				<Field.Field>
+					<Field.Label for="bOpacity">
+						Border Weight
+						<span class="ml-1">{bWeight}</span>
+					</Field.Label>
+					<Slider
+						type="single"
+						bind:value={bWeight}
+						max={10}
+						min={0}
+						step={0.1}
+						class="mt-2 w-full"
+						aria-label="TODO: Range"
+					/>
+				</Field.Field>
+			</Field.Group>
 		</Field.Set>
 	</div>
 
