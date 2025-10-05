@@ -8,14 +8,7 @@ export interface ICountryModel {
 	properties: {
 		name: string;
 		saved: boolean;
-		style: {
-			color?: string;
-			dashArray?: string;
-			fillColor?: string;
-			fillOpacity?: string;
-			opacity?: string;
-			weight?: string;
-		} | null;
+		style: IGeometryStyle;
 		created_at: string | null;
 		updated_at: string | null;
 	};
@@ -37,14 +30,7 @@ export interface ICountry {
 		name: string;
 		// places: IPlace[];
 		saved: boolean;
-		style: {
-			color?: string;
-			dashArray?: string;
-			fillColor?: string;
-			fillOpacity?: string;
-			opacity?: string;
-			weight?: string;
-		} | null;
+		style: IGeometryStyle;
 		created_at: string | null;
 		updated_at: string | null;
 	};
@@ -64,4 +50,13 @@ export interface ICountrySource {
 		type: 'Polygon';
 		coordinates: unknown[];
 	};
+}
+
+export interface IGeometryStyle {
+	color: string;
+	dashArray: number;
+	fillColor: string;
+	fillOpacity: number;
+	opacity: number;
+	weight: number;
 }

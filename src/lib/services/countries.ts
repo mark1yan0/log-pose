@@ -7,6 +7,7 @@ import {
 	type ICountryModel,
 	type ICountrySource
 } from './db';
+import defaults from '$lib/constants/defaults';
 
 class CountriesManager {
 	private static instance: CountriesManager;
@@ -43,7 +44,7 @@ class CountriesManager {
 				properties: {
 					name: f.properties.NAME,
 					saved: false,
-					style: null,
+					style: defaults.countries.styles.default,
 					created_at: null,
 					updated_at: null
 				}
@@ -114,6 +115,7 @@ class CountriesManager {
 				throw new Error('No selected country to save found');
 			}
 
+			// const fill = c.properties.style.fillColor === defaults.countries.styles.default.fillColor ? '#2596be' :
 			await db.countries.update(c.id, {
 				properties: {
 					...c.properties,
@@ -121,7 +123,7 @@ class CountriesManager {
 					created_at: new Date().toISOString(),
 					updated_at: new Date().toISOString(),
 					style: {
-						fillColor: '#2596be'
+						...c.properties.style
 					}
 				}
 			});
@@ -144,7 +146,7 @@ class CountriesManager {
 					saved: false,
 					created_at: null,
 					updated_at: null,
-					style: null
+					style: defaults.countries.styles.default
 				}
 			});
 			toast.success(`Country ${c.properties.name} deleted`);

@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { Map, GeoJSON as GeoJSONComponent, ControlZoom } from 'sveaflet';
 	import { type Layer, type Map as TMap, type LeafletMouseEvent } from 'leaflet';
-	// import MarkerIcon from '$lib/components/map/marker-icon.svelte';
 	import defaults from '$lib/constants/defaults';
 	import countriesManager from '$lib/services/countries';
 	import { liveQuery } from 'dexie';
-	import CountryModal from './modal/country-modal.svelte';
 	import type { ICountry } from '$lib/services/db';
+	import Configurator from './configurator/configurator.svelte';
+	import configurator from '$lib/services/configurator.svelte';
 
 	let map = $state<TMap | undefined>();
 	let geojson = $state<
@@ -32,10 +32,7 @@
 	});
 
 	function style(feature: ICountry) {
-		if (feature.properties.saved && feature.properties.style) {
-			return feature.properties.style;
-		}
-		return defaults.countries.styles.default;
+		return feature.properties.style;
 	}
 
 	function hoverShape(ev: LeafletMouseEvent) {
@@ -66,14 +63,12 @@
 		// document.documentElement.style.setProperty('--cursor-size', '4rem');
 	}
 
-	let selected = $state<ICountry | null>(null);
 	function onShapeClick(ev: LeafletMouseEvent) {
 		if (!map) {
 			return;
 		}
 
-		// opens modal
-		selected = ev.target.feature;
+		configurator.open(ev.target.feature);
 		map.fitBounds(ev.target.getBounds());
 	}
 
@@ -139,4 +134,4 @@
 	</Map>
 </div>
 
-<CountryModal {selected} {map} />
+<Configurator {map} />
