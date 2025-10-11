@@ -11,14 +11,20 @@
 		throw new Error('no draft');
 	}
 
+	// interface IProps {
+	// 	styles: object;
+	// }
+
+	// let { styles }: IProps = $props();
+
 	let isNew = $derived(!configurator.draft.properties.saved);
 
-	let bColor = $state(configurator.draft.properties.style.color);
-	let fColor = $state(configurator.draft.properties.style.fillColor);
-	// let b = $state(configurator.draft?.properties.style.dashArray)
-	let fOpacity = $state(configurator.draft.properties.style.fillOpacity);
-	let bWeight = $state(configurator.draft.properties.style.weight);
-	let bOpacity = $state(configurator.draft.properties.style.opacity);
+	let styles = $state(configurator.draft.properties.style);
+	// let fColor = $state(configurator.draft.properties.style.fillColor);
+	// // let b = $state(configurator.draft?.properties.style.dashArray)
+	// let fOpacity = $state(configurator.draft.properties.style.fillOpacity);
+	// let bWeight = $state(configurator.draft.properties.style.weight);
+	// let bOpacity = $state(configurator.draft.properties.style.opacity);
 	// TODO: on change, preview must update
 
 	async function confirmHandler() {
@@ -30,14 +36,15 @@
 			...configurator.draft,
 			properties: {
 				...configurator.draft.properties,
-				style: {
-					color: bColor,
-					fillColor: fColor,
-					fillOpacity: fOpacity,
-					weight: bWeight,
-					opacity: bOpacity,
-					dashArray: 3 // TODO
-				}
+				style: styles
+				// {
+				// 	color: bColor,
+				// 	fillColor: fColor,
+				// 	fillOpacity: fOpacity,
+				// 	weight: bWeight,
+				// 	opacity: bOpacity,
+				// 	dashArray: 3 // TODO
+				// }
 			}
 		});
 		configurator.close();
@@ -66,22 +73,22 @@
 			<Field.Group>
 				<Field.Field>
 					<Field.Label for="color">Broder color</Field.Label>
-					<Input type="color" bind:value={bColor} id="color" />
+					<Input type="color" bind:value={styles.color} id="color" />
 				</Field.Field>
 				<Field.Field>
 					<Field.Label for="fillColor">Fill color</Field.Label>
-					<Input type="color" bind:value={fColor} id="fillColor" />
+					<Input type="color" bind:value={styles.fillColor} id="fillColor" />
 				</Field.Field>
 			</Field.Group>
 			<Field.Group>
 				<Field.Field>
 					<Field.Label for="opacity">
 						Border opacity
-						<span class="ml-1">{bOpacity}</span>
+						<span class="ml-1">{styles.opacity}</span>
 					</Field.Label>
 					<Slider
 						type="single"
-						bind:value={bOpacity}
+						bind:value={styles.opacity}
 						max={1}
 						min={0}
 						step={0.1}
@@ -92,11 +99,11 @@
 				<Field.Field>
 					<Field.Label for="fOpacity">
 						Fill opacity
-						<span class="ml-1">{fOpacity}</span>
+						<span class="ml-1">{styles.fillOpacity}</span>
 					</Field.Label>
 					<Slider
 						type="single"
-						bind:value={fOpacity}
+						bind:value={styles.fillOpacity}
 						max={1}
 						min={0}
 						step={0.1}
@@ -107,11 +114,11 @@
 				<Field.Field>
 					<Field.Label for="bOpacity">
 						Border Weight
-						<span class="ml-1">{bWeight}</span>
+						<span class="ml-1">{styles.weight}</span>
 					</Field.Label>
 					<Slider
 						type="single"
-						bind:value={bWeight}
+						bind:value={styles.weight}
 						max={10}
 						min={0}
 						step={0.1}

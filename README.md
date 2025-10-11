@@ -40,14 +40,18 @@ You can preview the production build with `npm run preview`.
 # TODO
 
 - [ ] remove places related code for now
-- [ ] handle modal with values for colors ecc for a country
-- [ ] refactor layout. remove header and non needed routes
+- [x] handle modal with values for colors ecc for a country
+- [x] refactor layout. remove header and non needed routes
 - [ ] remove unused components
-- [ ] add an islan with buttons to print and setting
+- [ ] add print feature
 - [ ] settings page
-    - [x] export/inport
-        - [ ] cancel option
-    - [ ] ui
+  - [x] export/inport
+    - [ ] cancel option
+  - [ ] ui
 - [ ] solve ts errors
 - [ ] review and standardize all toeast messages
 - [ ] solve navigation selected for settings
+- [ ] define default styling
+- [ ] can only update colors for now
+- [ ] use can add infomration such as date visited and how many times
+- [ ] get bg pattern

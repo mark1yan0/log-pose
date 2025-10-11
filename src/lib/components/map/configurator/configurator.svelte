@@ -1,9 +1,9 @@
 <script lang="ts">
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import type { Map } from 'leaflet';
-	import Renderer from './renderer.svelte';
-	import Settings from './settings.svelte';
 	import configurator from '$lib/services/configurator.svelte';
+	import Settings from './settings.svelte';
+	import Renderer from './renderer.svelte';
 
 	interface IProps {
 		map: Map | undefined;
