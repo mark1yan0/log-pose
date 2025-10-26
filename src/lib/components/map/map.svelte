@@ -6,6 +6,7 @@
 	import { liveQuery } from 'dexie';
 	import Configurator from './configurator/configurator.svelte';
 	import configurator from '$lib/services/configurator.svelte';
+	import PrintModal from './printer/print-modal.svelte';
 
 	let map = $state<TMap | undefined>();
 	let geojson = $state<GeoJSON | undefined>();
@@ -67,3 +68,5 @@
 </div>
 
 <Configurator {map} />
+
+<PrintModal />

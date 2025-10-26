@@ -43,7 +43,7 @@ You can preview the production build with `npm run preview`.
 - [x] handle modal with values for colors ecc for a country
 - [x] refactor layout. remove header and non needed routes
 - [ ] remove unused components
-- [ ] add print feature
+- [x] add print feature
 - [ ] settings page as modal
   - [x] export/inport
     - [ ] cancel option
@@ -58,3 +58,5 @@ You can preview the production build with `npm run preview`.
 - [ ] customize country
   - [ ] colors
   - [ ] labels
+- [ ] deploy
+- [ ] handle responsive

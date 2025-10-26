@@ -14,6 +14,7 @@
 		"lint": "prettier --check . && eslint ."
 	},
 	"dependencies": {
+		"@zumer/snapdom": "^1.9.14",
 		"dexie": "^4.0.11",
 		"dexie-export-import": "^4.1.4",
 		"sveaflet": "^0.1.4"
