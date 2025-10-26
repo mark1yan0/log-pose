@@ -7,10 +7,10 @@ import {
 	type ICountryModel,
 	type ICountrySource
 } from './db';
-import defaults from '$lib/constants/defaults';
 
 class CountriesManager {
 	private static instance: CountriesManager;
+
 	constructor() {}
 
 	public static getInstance(): CountriesManager {
@@ -34,6 +34,11 @@ class CountriesManager {
 		const parsedCountries: Omit<ICountryModel, 'id'>[] = [];
 		const parsedCoords: Omit<ICoordinateModel, 'id'>[] = [];
 
+		if (!('features' in source)) {
+			// TODO: handle errors
+			throw new Error('DB: No features property in source data');
+		}
+
 		const features = source.features as ICountrySource[];
 		features.forEach((f, i) => {
 			parsedCountries.push({
@@ -44,7 +49,7 @@ class CountriesManager {
 				properties: {
 					name: f.properties.NAME,
 					saved: false,
-					style: defaults.countries.styles.default,
+					style: {},
 					created_at: null,
 					updated_at: null
 				}
@@ -110,11 +115,10 @@ class CountriesManager {
 	 * All countires are already in the db. This method updates the specific country properties
 	 */
 	public async save(c: ICountry | null) {
+		if (!c) {
+			throw new Error('No selected country to save found');
+		}
 		try {
-			if (!c) {
-				throw new Error('No selected country to save found');
-			}
-
 			let createdAt = new Date().toISOString();
 			if (c.properties.saved) {
 				createdAt = c.properties.created_at as string;
@@ -124,10 +128,7 @@ class CountriesManager {
 					...c.properties,
 					saved: true,
 					created_at: createdAt,
-					updated_at: new Date().toISOString(),
-					style: {
-						...c.properties.style
-					}
+					updated_at: new Date().toISOString()
 				}
 			});
 			toast.success(`Country ${c.properties.name} saved`);
@@ -138,18 +139,17 @@ class CountriesManager {
 	}
 
 	public async delete(c: ICountry | null) {
+		if (!c) {
+			throw new Error('No selected country to delete found');
+		}
 		try {
-			if (!c) {
-				throw new Error('No selected country to delete found');
-			}
-
 			await db.countries.update(c.id, {
 				properties: {
 					...c.properties,
 					saved: false,
 					created_at: null,
 					updated_at: null,
-					style: defaults.countries.styles.default
+					style: {}
 				}
 			});
 			toast.success(`Country ${c.properties.name} deleted`);

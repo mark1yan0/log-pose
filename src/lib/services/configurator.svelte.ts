@@ -9,11 +9,8 @@ class CountryConfigurator {
 	public open(country: ICountry) {
 		this.opened = true;
 		this.draft = country;
-		// TODO: define a default style when saving a new country
-		// TODO: add a randomizer
 		if (!country.properties.saved) {
-			// set a default fill color initially for new countries
-			this.draft.properties.style.fillColor = '#2596be';
+			this.draft.properties.style.className = 'saved';
 		}
 	}
 

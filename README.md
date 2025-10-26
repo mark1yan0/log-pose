@@ -39,19 +39,22 @@ You can preview the production build with `npm run preview`.
 
 # TODO
 
-- [ ] remove places related code for now
+- [x] remove places related code for now
 - [x] handle modal with values for colors ecc for a country
 - [x] refactor layout. remove header and non needed routes
 - [ ] remove unused components
 - [ ] add print feature
-- [ ] settings page
+- [ ] settings page as modal
   - [x] export/inport
     - [ ] cancel option
-  - [ ] ui
+  - [ ] ui theme configurator
 - [ ] solve ts errors
-- [ ] review and standardize all toeast messages
+- [ ] review and standardize all toast messages
 - [ ] solve navigation selected for settings
-- [ ] define default styling
-- [ ] can only update colors for now
+- [x] define default styling
 - [ ] use can add infomration such as date visited and how many times
-- [ ] get bg pattern
+- [x] get bg pattern
+- [ ] error handling
+- [ ] customize country
+  - [ ] colors
+  - [ ] labels

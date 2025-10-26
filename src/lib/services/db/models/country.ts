@@ -1,3 +1,5 @@
+import type { PathOptions } from 'leaflet';
+
 /**
  * The country coords are in a saparate table and
  * then joined in a query
@@ -8,7 +10,7 @@ export interface ICountryModel {
 	properties: {
 		name: string;
 		saved: boolean;
-		style: IGeometryStyle;
+		style: PathOptions;
 		created_at: string | null;
 		updated_at: string | null;
 	};
@@ -30,7 +32,7 @@ export interface ICountry {
 		name: string;
 		// places: IPlace[];
 		saved: boolean;
-		style: IGeometryStyle;
+		style: PathOptions;
 		created_at: string | null;
 		updated_at: string | null;
 	};
@@ -50,13 +52,4 @@ export interface ICountrySource {
 		type: 'Polygon';
 		coordinates: unknown[];
 	};
-}
-
-export interface IGeometryStyle {
-	color: string;
-	dashArray: number;
-	fillColor: string;
-	fillOpacity: number;
-	opacity: number;
-	weight: number;
 }

@@ -6,13 +6,14 @@
 	import configurator from '$lib/services/configurator.svelte';
 	import countriesManager from '$lib/services/countries';
 
+	// This is not necessary anymore but keep here for the future
 	if (!configurator.draft) {
 		throw new Error('no draft');
 	}
 
+	// TODO: handle live updates
 	let isNew = $derived(!configurator.draft.properties.saved);
-
-	let styles = $state(configurator.draft.properties.style);
+	// let styles = $state(configurator.draft.properties.style);
 
 	async function confirmHandler() {
 		if (!configurator.draft) {
@@ -23,7 +24,9 @@
 			...configurator.draft,
 			properties: {
 				...configurator.draft.properties,
-				style: styles
+				style: {
+					className: 'saved'
+				}
 			}
 		});
 		configurator.close();
@@ -48,7 +51,7 @@
 			<Dialog.Description>Manage country</Dialog.Description>
 		</Dialog.Header>
 		<br />
-		<Field.Set class="flex-row items-center gap-2">
+		<!-- <Field.Set class="flex-row items-center gap-2">
 			<Field.Field>
 				<Field.Label for="color">Broder color</Field.Label>
 				<Input type="color" bind:value={styles.color} id="color" />
@@ -57,7 +60,7 @@
 				<Field.Label for="fillColor">Fill color</Field.Label>
 				<Input type="color" bind:value={styles.fillColor} id="fillColor" />
 			</Field.Field>
-		</Field.Set>
+		</Field.Set> -->
 	</div>
 
 	<Dialog.Footer class="self-end">
