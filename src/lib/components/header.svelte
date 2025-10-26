@@ -8,10 +8,10 @@
 </script>
 
 <header class="fixed top-0 left-0 z-[9999] flex w-full justify-between p-2">
-	<Link href="/" class="flex h-16 items-center rounded-xl bg-card px-4 shadow">logpose</Link>
+	<Link href="/" class="flex h-16 items-center rounded-xl bg-card px-4 shadow-md">logpose</Link>
 	<nav
 		id="primary-nav"
-		class="flex h-16 items-center justify-between gap-2 rounded-xl bg-card px-4 shadow"
+		class="flex h-16 items-center justify-between gap-2 rounded-xl bg-card px-4 shadow-md"
 	>
 		<Button variant="outline" aria-label="Go to map" href="/">
 			<MapIcon />

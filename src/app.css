@@ -146,10 +146,10 @@
 
 	.leaflet-interactive {
 		fill-opacity: 1 !important;
-		@apply !fill-country stroke-map-bg hover:brightness-200;
+		@apply !fill-country stroke-map-bg transition hover:brightness-200;
 
 		&.saved {
-			@apply !fill-country-saved;
+			@apply !fill-country-saved hover:brightness-75;
 		}
 	}
 }
