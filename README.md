@@ -60,5 +60,6 @@ You can preview the production build with `npm run preview`.
 - [ ] customize country
   - [ ] colors
   - [ ] labels
-- [ ] deploy
+- [x] deploy
 - [ ] handle responsive
+- [ ] add loader for db seeding
