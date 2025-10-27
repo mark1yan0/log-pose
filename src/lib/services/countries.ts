@@ -1,4 +1,3 @@
-import source from '$lib/assets/countries.geo.v2.json';
 import { toast } from 'svelte-sonner';
 import {
 	db,
@@ -27,13 +26,15 @@ class CountriesManager {
 	 */
 	public async init() {
 		if ((await db.countries.count()) > 0) {
-			console.log('Countries already filled');
 			return;
 		}
 
+		console.log('Seeding db...');
 		const parsedCountries: Omit<ICountryModel, 'id'>[] = [];
 		const parsedCoords: Omit<ICoordinateModel, 'id'>[] = [];
 
+		const res = await fetch('/seed/countries.geo.large.json');
+		const source = await res.json();
 		if (!('features' in source)) {
 			// TODO: handle errors
 			throw new Error('DB: No features property in source data');

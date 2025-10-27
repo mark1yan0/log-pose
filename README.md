@@ -42,7 +42,6 @@ You can preview the production build with `npm run preview`.
 - [x] remove places related code for now
 - [x] handle modal with values for colors ecc for a country
 - [x] refactor layout. remove header and non needed routes
-- [ ] remove unused components
 - [x] add print feature
 - [ ] settings page as modal
   - [x] export/inport
@@ -50,10 +49,13 @@ You can preview the production build with `npm run preview`.
   - [ ] ui theme configurator
 - [ ] solve ts errors
 - [ ] review and standardize all toast messages
-- [ ] solve navigation selected for settings
 - [x] define default styling
 - [ ] use can add infomration such as date visited and how many times
 - [x] get bg pattern
+- [x] standardize theme config
+- [ ] create a custom theme
+- [ ] solve light theme
+- [ ] review ui ineractions
 - [ ] error handling
 - [ ] customize country
   - [ ] colors
