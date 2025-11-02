@@ -63,3 +63,4 @@ You can preview the production build with `npm run preview`.
 - [x] deploy
 - [ ] handle responsive
 - [ ] add loader for db seeding
+- [ ] PWA
