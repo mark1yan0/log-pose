@@ -9,6 +9,7 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { snapdom } from '@zumer/snapdom';
 	import { toast } from 'svelte-sonner';
+	import { getImageSize, type TExportSizes } from './config';
 
 	let opened = $state(false);
 
@@ -16,6 +17,7 @@
 	let geojson = $state<GeoJSON | undefined>();
 	let countries = liveQuery(async () => await countriesManager.all());
 
+	let selectedSize = $state<TExportSizes>('4k-landscape');
 	async function printHandler() {
 		if (!map) {
 			return;
@@ -51,15 +53,18 @@
 			}
 		});
 
+		// fallback to mobile
+		const size = getImageSize(selectedSize);
+
 		try {
 			const result = await snapdom(preview, {
-				width: 3840,
-				height: 2160
+				width: size.width,
+				height: size.height
 			});
 
 			await result.toPng();
 
-			await result.download({ format: 'jpg', filename: 'my-capture' });
+			await result.download({ format: 'jpg', filename: 'my-log-pose' });
 		} catch (err) {
 			console.error(err);
 			toast.error('Error occured while exporting the poster');
@@ -83,8 +88,8 @@
 		</Dialog.Header>
 		<div
 			id="print-map-preview"
-			class="overflow-hidden rounded-2xl border border-primary"
-			style="aspect-ratio: 16/8;"
+			class="aspect-video overflow-hidden rounded-2xl border border-primary"
+			style={`aspect-ratio: ${getImageSize(selectedSize).aspectRatio}`}
 		>
 			<Map
 				options={{
@@ -110,7 +115,11 @@
 			</Map>
 		</div>
 
-		<Dialog.Footer>
+		<Dialog.Footer class="items-end sm:justify-between">
+			<div>
+				<p>Width: {getImageSize(selectedSize).width}</p>
+				<p>Height: {getImageSize(selectedSize).height}</p>
+			</div>
 			<Button onclick={printHandler}>Confirm</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
