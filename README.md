@@ -64,3 +64,6 @@ You can preview the production build with `npm run preview`.
 - [ ] handle responsive
 - [ ] add loader for db seeding
 - [ ] PWA
+  - [x] manifest
+  - [ ] assets
+  - [ ] colors
