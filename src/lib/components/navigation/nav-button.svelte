@@ -13,7 +13,7 @@
 	let { label, href, children }: IProps = $props();
 </script>
 
-<!-- TODO: focus visible -->
+<!-- TODO: focus visible and refactor to animated button -->
 <Button
 	aria-label={`Go to ${label}`}
 	{href}

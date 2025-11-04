@@ -53,10 +53,5 @@
 		{:else}
 			<p>theme</p>
 		{/if}
-
-		<!-- <Drawer.Footer>
-			<Button>Submit</Button>
-			<Drawer.Close>Cancel</Drawer.Close>
-		</Drawer.Footer> -->
 	</Drawer.Content>
 </Drawer.Root>
