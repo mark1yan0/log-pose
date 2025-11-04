@@ -6,6 +6,7 @@
 	import Header from '$lib/components/header.svelte';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import countriesManager from '$lib/services/countries';
+	import Navigation from '$lib/components/navigation/navigation.svelte';
 
 	let { children } = $props();
 
@@ -24,5 +25,7 @@
 <Header />
 
 {@render children?.()}
+
+<Navigation />
 
 <Toaster />
