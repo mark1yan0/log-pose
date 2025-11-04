@@ -2,7 +2,7 @@
   "name": "Log:Pose",
   "short_name": "log:pose",
   "description": "A simple app to keep trak of you journeys around the world",
-  "start_url": "/app.html",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
