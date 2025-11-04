@@ -72,11 +72,7 @@
 	}
 </script>
 
-<Button
-	onclick={() => (opened = true)}
-	size="icon"
-	class="over-map absolute right-6 bottom-6 scale-140 shadow-md transition hover:scale-180 hover:rounded-full hover:bg-primary hover:text-primary-foreground"
->
+<Button onclick={() => (opened = true)} size="icon-lg" variant="link">
 	<Download />
 </Button>
 
@@ -120,7 +116,7 @@
 				<p>Width: {getImageSize(selectedSize).width}</p>
 				<p>Height: {getImageSize(selectedSize).height}</p>
 			</div>
-			<Button onclick={printHandler}>Confirm</Button>
+			<Button onclick={printHandler} variant="primary">Confirm</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

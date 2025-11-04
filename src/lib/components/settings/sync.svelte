@@ -18,11 +18,6 @@
 	});
 </script>
 
-<p>
-	We do not save your data anywehere. <br />This way you are the owner of your data but there's no
-	cloud sync between devices. <br />From this section you can export or import your data
-</p>
-<br />
 <section class="flex w-full gap-4">
 	<Button variant="outline" class="h-64 flex-1" onclick={exportDatabase}>Export Data</Button>
 	<Button variant="outline" class="h-64 flex-1" onclick={importHandler}>Import Data</Button>
